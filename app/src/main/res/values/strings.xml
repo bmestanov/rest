@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">rest</string>
+    <string name="add_alarm">Add alarm</string>
+    <string name="settings">Settings</string>
 </resources>
