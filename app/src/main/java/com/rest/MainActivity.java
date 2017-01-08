@@ -1,20 +1,27 @@
 package com.rest;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TimePicker;
 
+import com.google.gson.Gson;
+
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity {
+    ListView alarmsList;
+    ArrayAdapter<Alarm> alarmsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +30,10 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle(null);
+
+        alarmsList = (ListView) findViewById(R.id.alarmsList);
+        alarmsAdapter = new AlarmAdapter(this, R.layout.alarm, App.getState().getAlarms());
+        alarmsList.setAdapter(alarmsAdapter);
     }
 
     @Override
@@ -43,10 +53,18 @@ public class MainActivity extends AppCompatActivity {
                 picker.setIs24HourView(true);
 
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @SuppressLint("NewApi")
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d("Received time", picker.getHour() + ": " + picker.getMinute());
+                        int hours, mins;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            hours = picker.getHour();
+                            mins = picker.getMinute();
+                        } else {
+                            hours = picker.getCurrentHour();
+                            mins = picker.getCurrentMinute();
+                        }
+
+                        setAlarm(hours, mins);
                     }
                 });
 
@@ -54,7 +72,22 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
         return true;
+    }
+
+    private void setAlarm(int hours, int mins) {
+        Log.d("Received time", hours + " : " + mins);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hours);
+        calendar.set(Calendar.MINUTE, mins);
+        new Alarm(calendar.getTimeInMillis(), null, this).set(this);
+        alarmsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //Saving the state.. just in case
+        App.getpController().saveState();
     }
 }

@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context="com.rest.MainActivity">
 
     <android.support.v7.widget.Toolbar
@@ -16,8 +16,10 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <TextView
-        style="@style/Base.TextAppearance.AppCompat.Large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <ListView
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:id="@+id/alarmsList"
+        android:layout_width="match_parent" />
+
 </LinearLayout>
