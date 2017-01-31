@@ -1,4 +1,7 @@
-package com.rest;
+package com.rest.state;
+
+import com.rest.models.Alarm;
+import com.rest.models.App;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,14 +21,15 @@ public class State {
     }
 
     public void addAlarm(Alarm alarm) {
-        alarm.setActive(true);
         activeAlarms.add(alarm);
         App.getpController().saveState();
+        //MainActivity.alarmsAdapter.notifyDataSetChanged();
     }
 
     public void cancelAlarm(Alarm alarm) {
         activeAlarms.remove(alarm);
         App.getpController().saveState();
+        //MainActivity.alarmsAdapter.notifyDataSetChanged();
     }
 
     public void removePast() {

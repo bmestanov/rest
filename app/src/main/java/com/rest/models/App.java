@@ -1,12 +1,17 @@
-package com.rest;
+package com.rest.models;
 
+import android.app.AlarmManager;
 import android.app.Application;
 import android.util.Log;
+
+import com.rest.state.PersistenceController;
+import com.rest.state.State;
 
 /**
  * Created on 08/01/2017
  */
 public class App extends Application {
+    private static AlarmManager alarmManager;
     private static State state;
     private static PersistenceController pController;
 
@@ -33,4 +38,6 @@ public class App extends Application {
         state = initialState;
         state.removePast();
     }
+
+
 }

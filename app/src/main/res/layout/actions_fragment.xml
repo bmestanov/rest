@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/fixed_wakeup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:background="@color/backgroundDark"
+        android:elegantTextHeight="true"
+        android:elevation="0dp"
+        android:text="Fixed wakeup"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/fixed_bedtime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:background="@color/backgroundDark"
+        android:text="Fixed bedtime"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/repeating_alarms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:background="@color/backgroundDark"
+        android:text="Repeating alarms"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:background="@color/backgroundDark"
+        android:text="Settings"
+        android:textSize="24sp" />
+</LinearLayout>

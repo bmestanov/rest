@@ -1,87 +1,61 @@
 package com.rest;
 
-import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TimePicker;
 
-import com.google.gson.Gson;
-
-import java.util.Calendar;
+import com.rest.fragments.ActionsFragment;
+import com.rest.fragments.SuggestionPickFragment;
+import com.rest.models.App;
+import com.rest.models.Suggestion;
 
 public class MainActivity extends AppCompatActivity {
-    ListView alarmsList;
-    ArrayAdapter<Alarm> alarmsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        alarmsList = (ListView) findViewById(R.id.alarmsList);
-        alarmsAdapter = new AlarmAdapter(this, R.layout.alarm, App.getState().getAlarms());
-        alarmsList.setAdapter(alarmsAdapter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_add_alarm: {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                View root = LayoutInflater.from(this).inflate(R.layout.time_picker, null);
-                builder.setView(root);
-                final TimePicker picker = (TimePicker) root.findViewById(R.id.timePicker);
-                picker.setIs24HourView(true);
-
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int hours, mins;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            hours = picker.getHour();
-                            mins = picker.getMinute();
-                        } else {
-                            hours = picker.getCurrentHour();
-                            mins = picker.getCurrentMinute();
-                        }
-
-                        setAlarm(hours, mins);
-                    }
-                });
-
-                builder.create().show();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ActionsFragment actionsFragment = new ActionsFragment();
+        actionsFragment.setListener(new ActionsFragment.OnTimePickedListener() {
+            @Override
+            public void onPick(int hour, int minute) {
+                setSuggestionFragment(hour, minute);
             }
-        }
+        });
 
-        return true;
+        ft.add(R.id.actions_fragment, actionsFragment);
+        ft.commit();
     }
 
-    private void setAlarm(int hours, int mins) {
-        Log.d("Received time", hours + " : " + mins);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hours);
-        calendar.set(Calendar.MINUTE, mins);
-        new Alarm(calendar.getTimeInMillis(), null, this).set(this);
-        alarmsAdapter.notifyDataSetChanged();
+    @Override
+    public void onBackPressed() {
+        getSupportFragmentManager().popBackStack();
+    }
+
+
+    private void setSuggestionFragment(int hours, int mins) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        SuggestionPickFragment suggestionPickFragment =
+                new SuggestionPickFragment();
+
+        suggestionPickFragment.setArguments(getBundle(hours, mins, Suggestion.FIXED_ALARM));
+
+        //ft.setCustomAnimations(R.anim.slide_right, R.anim.slide_left);
+        ft.replace(R.id.actions_fragment, suggestionPickFragment);
+        ft.addToBackStack(SuggestionPickFragment.class.getSimpleName());
+        // Start the animated transition.
+        ft.commit();
+    }
+
+    private Bundle getBundle(int hours, int mins, int mode) {
+        Bundle bundle = new Bundle(3);
+        bundle.putInt(Suggestion.HOUR, hours);
+        bundle.putInt(Suggestion.MINUTE, mins);
+        bundle.putInt(Suggestion.MODE, mode);
+        return bundle;
     }
 
     @Override
