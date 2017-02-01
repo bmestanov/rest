@@ -5,11 +5,13 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.rest.R;
 import com.rest.adapters.SuggestionAdapter;
 import com.rest.models.Suggestion;
+import com.rest.notification.NotificationMaster;
 import com.rest.util.RestCalc;
 
 import java.util.Calendar;
@@ -22,7 +24,8 @@ import java.util.List;
 
 public class SuggestionPickFragment extends android.support.v4.app.Fragment {
     private Date datetime;
-    private static int MODE;
+    private boolean notify;
+    private int mode;
 
 
     public SuggestionPickFragment() {
@@ -45,7 +48,8 @@ public class SuggestionPickFragment extends android.support.v4.app.Fragment {
         }
 
         datetime = new Date(calendar.getTimeInMillis());
-        MODE = args.getInt(Suggestion.MODE);
+        notify = args.getBoolean(Suggestion.NOTIFY);
+        mode = args.getInt(Suggestion.MODE);
     }
 
 
@@ -53,13 +57,21 @@ public class SuggestionPickFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.suggestion_fragment, container, false);
-        List<Suggestion> suggestions = RestCalc.calculate(datetime, MODE);
+        List<Suggestion> suggestions = RestCalc.calculate(datetime, mode, notify);
 
         ListView listView = (ListView) root.findViewById(R.id.suggestions_list);
-        SuggestionAdapter suggestionAdapter = new SuggestionAdapter(getContext(),
+        final SuggestionAdapter suggestionAdapter = new SuggestionAdapter(getContext(),
                 R.layout.alarm_suggestion,
                 suggestions);
         listView.setAdapter(suggestionAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                new NotificationMaster(getContext(), suggestionAdapter.getItem(position))
+                        .scheduleNotifications();
+                getActivity().onBackPressed();
+            }
+        });
         return root;
     }
 

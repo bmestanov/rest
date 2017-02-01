@@ -1,4 +1,4 @@
-package com.rest;
+package com.rest.notification;
 
 import android.app.Activity;
 import android.content.ComponentName;

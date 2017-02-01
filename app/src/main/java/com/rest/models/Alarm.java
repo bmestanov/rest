@@ -9,7 +9,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.rest.AlarmReceiver;
+import com.rest.notification.AlarmReceiver;
 import com.rest.R;
 
 import java.text.DateFormatSymbols;

@@ -1,4 +1,4 @@
-package com.rest;
+package com.rest.notification;
 
 /**
  * Created by Bilal on 6.1.2017 г..
@@ -12,6 +12,9 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.rest.MainActivity;
+import com.rest.R;
+
 public class AlarmService extends IntentService {
     public AlarmService() {
         super("AlarmService");
@@ -19,6 +22,7 @@ public class AlarmService extends IntentService {
 
     @Override
     public void onHandleIntent(Intent intent) {
+        //ToDo Check the type of the event
         Log.d(getClass().getSimpleName(), "In the intent service!");
         sendNotification("Wake Up! Wake Up!");
     }
@@ -31,10 +35,10 @@ public class AlarmService extends IntentService {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, MainActivity.class), 0);
 
-        //ToDo Add snooze
         NotificationCompat.Builder alarmNotificationBuilder = new NotificationCompat.Builder(
-                this).setContentTitle("Alarm").setSmallIcon(R.drawable.ic_notification)
+                this).setContentTitle("rest").setSmallIcon(R.drawable.ic_notification)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+                .setSubText("Time to have a good nap.")
                 .setContentText(msg);
 
 

@@ -1,6 +1,5 @@
 package com.rest.fragments;
 
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,20 +13,29 @@ import android.widget.TimePicker;
 
 import com.rest.R;
 
+import java.util.Calendar;
+
 /**
  * Created on 24/01/2017
  */
 
 public class ActionsFragment extends android.support.v4.app.Fragment {
 
-    public interface OnTimePickedListener {
-        public void onPick(int hour, int minute);
+    public interface OnActionSelectedListener {
+        public void onFixedAlarmPicked(int hour, int minute);
+
+        //Rest notification is optional - user can select to rest now
+        public void onFixedRestPicked(int hour, int minute, boolean notify);
+
+        public void onRepeatedAlarmsPicked();
+
+        public void onSettingsPicked();
     }
 
-    Button fixedWakeup, fixedBedtime, repeatingAlarms, settings;
-    OnTimePickedListener listener;
+    Button fixedWakeup, fixedRestTime, repeatingAlarms, settings;
+    OnActionSelectedListener listener;
 
-    public void setListener(OnTimePickedListener listener) {
+    public void setListener(OnActionSelectedListener listener) {
         this.listener = listener;
     }
 
@@ -41,17 +49,24 @@ public class ActionsFragment extends android.support.v4.app.Fragment {
         fixedWakeup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTimePicker();
+                showTimePicker(false);
             }
         });
 
-        fixedBedtime = (Button) root.findViewById(R.id.fixed_bedtime);
+        fixedRestTime = (Button) root.findViewById(R.id.fixed_bedtime);
+        fixedRestTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePicker(true);
+            }
+        });
+
         repeatingAlarms = (Button) root.findViewById(R.id.repeating_alarms);
         settings = (Button) root.findViewById(R.id.settings);
         return root;
     }
 
-    private void showTimePicker() {
+    private void showTimePicker(final boolean fixedRestTime) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View root = LayoutInflater.from(getActivity()).inflate(R.layout.time_picker, null);
         builder.setView(root);
@@ -70,9 +85,24 @@ public class ActionsFragment extends android.support.v4.app.Fragment {
                     mins = picker.getCurrentMinute();
                 }
 
-                listener.onPick(hours, mins);
+                if (fixedRestTime) {
+                    listener.onFixedRestPicked(hours, mins, true);
+                } else {
+                    listener.onFixedAlarmPicked(hours, mins);
+                }
             }
         });
+
+        if (fixedRestTime) {
+            builder.setNeutralButton(R.string.now, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Calendar c = Calendar.getInstance();
+                    listener.onFixedRestPicked(c.get(Calendar.HOUR_OF_DAY),
+                            c.get(Calendar.MINUTE), false);
+                }
+            });
+        }
 
         builder.create().show();
     }
