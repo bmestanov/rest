@@ -28,17 +28,16 @@ public class MainActivity extends AppCompatActivity {
         listener = new OnActionSelectedListener() {
             @Override
             public void onFixedAlarmPicked(int hour, int minute) {
-                setSuggestionFragment(hour, minute, Suggestion.FIXED_ALARM, true);
+                setSuggestionFragment(hour, minute, Suggestion.FIXED_ALARM);
             }
 
             @Override
-            public void onFixedRestPicked(int hour, int minute, boolean notify) {
-                setSuggestionFragment(hour, minute, Suggestion.FIXED_REST, notify);
+            public void onFixedRestPicked(int hour, int minute) {
+                setSuggestionFragment(hour, minute, Suggestion.FIXED_REST);
             }
 
             @Override
             public void onRepeatedAlarmsPicked() {
-
             }
 
             @Override
@@ -55,24 +54,23 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
-    private void setSuggestionFragment(int hours, int mins, int mode, boolean notify) {
+    private void setSuggestionFragment(int hours, int mins, int mode) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         SuggestionPickFragment suggestionPickFragment =
                 new SuggestionPickFragment();
 
         suggestionPickFragment.setArguments(
-                makeBundle(hours, mins, mode, notify));
+                makeBundle(hours, mins, mode));
 
         ft.replace(R.id.actions_fragment, suggestionPickFragment);
         ft.addToBackStack(null);
         ft.commit();
     }
 
-    private Bundle makeBundle(int hours, int mins, int mode, boolean notify) {
+    private Bundle makeBundle(int hours, int mins, int mode) {
         Bundle bundle = new Bundle(3);
         bundle.putInt(Suggestion.HOUR, hours);
         bundle.putInt(Suggestion.MINUTE, mins);
-        bundle.putBoolean(Suggestion.NOTIFY, notify);
         bundle.putInt(Suggestion.MODE, mode);
         return bundle;
     }

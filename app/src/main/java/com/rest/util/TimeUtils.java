@@ -26,6 +26,18 @@ public class TimeUtils {
                 c.get(Calendar.MINUTE));
     }
 
+    public static Date now() {
+        return new Date();
+    }
+
+    public static int intervalInMinutes(Date now, Date then) {
+        HourMinute nowHM = fromTimestamp(now);
+        HourMinute thenHM = fromTimestamp(then);
+
+        return Math.abs(nowHM.hour - thenHM.hour) * 60 +
+                Math.abs(nowHM.minute - thenHM.minute);
+    }
+
     static long addMinutes(long time, int minutes) {
         return time + 1000 * 60 * minutes;
     }

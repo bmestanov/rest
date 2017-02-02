@@ -8,65 +8,82 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static com.rest.models.Suggestion.FIXED_ALARM;
+import static com.rest.models.Suggestion.MAX_CYCLES;
+import static com.rest.state.Settings.CYCLE_LENGTH;
+import static com.rest.state.Settings.REST_DELAY;
+import static com.rest.state.Settings.SLEEP_DELAY;
+
 /**
  * Created on 22/01/2017
  */
 public class RestCalc {
-    public static List<Suggestion> calculate(Date datetime, int mode, boolean notify) {
-        List<Suggestion> suggestions = new ArrayList<>();
+    public static List<Suggestion> calculate(Date datetime, int mode) {
+        List<Suggestion> suggestions;
 
-        if (mode == Suggestion.FIXED_ALARM) {
-            forFixedAlarm(datetime, suggestions);
-        } else if (mode == Suggestion.FIXED_REST) {
-            forFixedRest(datetime, notify, suggestions);
-        }
+        suggestions = (mode == FIXED_ALARM) ?
+                forFixedAlarm(datetime) : forFixedRest(datetime);
 
         Collections.sort(suggestions); //Optimal times first
         return suggestions;
     }
 
-    private static void forFixedAlarm(Date datetime, List<Suggestion> suggestions) {
-        long now = System.currentTimeMillis();
-        long then = datetime.getTime();
+    private static List<Suggestion> forFixedAlarm(Date alarmTime) {
+        List<Suggestion> suggestions = new ArrayList<>();
+
+        final long now = System.currentTimeMillis(); // The current time
+        final long alarmAt = alarmTime.getTime();        // Time of the alarm
 
         int cycles = 0, sleepMins = 0;
 
-        now += 1000 * 60 * (Settings.REST_DELAY + Settings.SLEEP_DELAY);
-
-        while (now < then) {
+        while (true) {
             cycles++;
-            sleepMins += Settings.CYCLE_LENGTH;
+            sleepMins += CYCLE_LENGTH;
 
             int sleepHours = sleepMins / 60;
 
-            then = TimeUtils.subtractMinutes(then, Settings.CYCLE_LENGTH);
-            if (now < then) {
-                suggestions.add(new Suggestion(new Date(now),
-                        new Date(then),
+            long notifyAt = TimeUtils
+                    .subtractMinutes(alarmAt,
+                            REST_DELAY + SLEEP_DELAY + cycles * CYCLE_LENGTH);
+
+            if (now < notifyAt) {
+                suggestions.add(new Suggestion(new Date(notifyAt),
+                        new Date(alarmAt),
                         cycles,
                         sleepHours,
                         sleepMins - sleepHours * 60));
+            } else {
+                break;
             }
         }
+
+        return suggestions;
     }
 
-    private static void forFixedRest(Date datetime, boolean notify, List<Suggestion> suggestions) {
-        long then = datetime.getTime();
-        final long sleepTime = TimeUtils.subtractMinutes(then, Settings.REST_DELAY);
+    private static List<Suggestion> forFixedRest(Date restTime) {
+        List<Suggestion> suggestions = new ArrayList<>(MAX_CYCLES);
+
+        final long now = restTime.getTime(); // Time of user going to rest
+
+        final long notifyAt = TimeUtils.subtractMinutes(now,
+                REST_DELAY); // Show notification before REST_DELAY mins
 
         int cycles = 1, sleepMins = 0;
 
-        then = TimeUtils.addMinutes(then, Settings.SLEEP_DELAY);
-        for (; cycles <= Suggestion.MAX_CYCLES; cycles++) {
-            sleepMins += Settings.CYCLE_LENGTH;
+        for (; cycles <= MAX_CYCLES; cycles++) {
+            sleepMins += CYCLE_LENGTH;
 
             int sleepHours = sleepMins / 60;
 
-            then = TimeUtils.addMinutes(then, Settings.CYCLE_LENGTH);
-            Suggestion suggestion = new Suggestion(notify ? new Date(sleepTime) : null,
-                    new Date(then), cycles,
+            long suggestedAlarmAt = TimeUtils.addMinutes(now,
+                    SLEEP_DELAY + cycles * CYCLE_LENGTH);
+
+            Suggestion suggestion = new Suggestion(new Date(notifyAt),
+                    new Date(suggestedAlarmAt), cycles,
                     sleepHours, sleepMins - sleepHours * 60);
             suggestions.add(suggestion);
         }
+
+        return suggestions;
     }
 }

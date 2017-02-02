@@ -24,11 +24,13 @@ public class SuggestionAdapter extends BaseAdapter {
     private List<Suggestion> suggestionList;
     private int resID;
     private Context context;
+    private int mode;
 
-    public SuggestionAdapter(Context context, int resource, List<Suggestion> suggestionList) {
+    public SuggestionAdapter(Context context, int resource, List<Suggestion> suggestionList, int mode) {
         this.context = context;
         this.suggestionList = suggestionList;
         this.resID = resource;
+        this.mode = mode;
     }
 
     @Override
@@ -59,15 +61,15 @@ public class SuggestionAdapter extends BaseAdapter {
 
         Suggestion suggestion = getItem(position);
         ((TextView) root.findViewById(R.id.suggestedAlarmTime))
-                .setText(suggestion.getFormattedTime());
+                .setText(suggestion.getFormattedTime(mode));
         ((TextView) root.findViewById(R.id.amountSleep))
                 .setText(String.format("%dh %dm of sleep",
                         suggestion.getSleepHours(),
                         suggestion.getSleepMins()));
-        ((TextView) root.findViewById(R.id.cycleCount))
-                .setText(String.format("%d cycles",
-                        suggestion.getCycles()));
 
+        int cycles = suggestion.getCycles();
+        ((TextView) root.findViewById(R.id.cycleCount))
+                .setText(cycles == 1 ? cycles + " cycle" : cycles + " cycles");
         return root;
     }
 }

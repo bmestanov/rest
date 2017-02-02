@@ -12,8 +12,8 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.rest.MainActivity;
 import com.rest.R;
+import com.rest.RateActivity;
 
 public class AlarmService extends IntentService {
     public AlarmService() {
@@ -22,28 +22,42 @@ public class AlarmService extends IntentService {
 
     @Override
     public void onHandleIntent(Intent intent) {
-        //ToDo Check the type of the event
         Log.d(getClass().getSimpleName(), "In the intent service!");
-        sendNotification("Wake Up! Wake Up!");
+
+        int type = intent.getIntExtra(NotificationMaster.NOTIFICATION_TYPE,
+                NotificationMaster.EVENT_ALARM);
+
+        PendingIntent contentIntent = null;
+        String msg;
+
+        if (type == NotificationMaster.EVENT_ALARM) {
+            contentIntent = PendingIntent.getActivity(this, 0,
+                    new Intent(this, RateActivity.class), 0);
+            msg = "How do you feel?";
+        } else {
+            msg = "Time for a good nap.";
+        }
+
+        sendNotification(contentIntent, msg);
+        Log.d("AlarmService", "Notification sent.");
     }
 
-    private void sendNotification(String msg) {
-        Log.d("AlarmService", "Preparing to send notification...: " + msg);
-        NotificationManager alarmNotificationManager = (NotificationManager) this
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+    private void sendNotification(PendingIntent contentIntent, String msg) {
+        NotificationManager alarmNotificationManager =
+                (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
 
-        NotificationCompat.Builder alarmNotificationBuilder = new NotificationCompat.Builder(
-                this).setContentTitle("rest").setSmallIcon(R.drawable.ic_notification)
+        NotificationCompat.Builder alarmNotificationBuilder = new NotificationCompat.Builder(this)
+                .setContentTitle("Hey there!")
+                .setSmallIcon(R.drawable.ic_notification)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                .setSubText("Time to have a good nap.")
                 .setContentText(msg);
 
 
-        alarmNotificationBuilder.setContentIntent(contentIntent);
+        if (contentIntent != null) {
+            alarmNotificationBuilder.setContentIntent(contentIntent);
+        }
+
         alarmNotificationManager.notify(1, alarmNotificationBuilder.build());
-        Log.d("AlarmService", "Notification sent.");
     }
 }

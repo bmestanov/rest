@@ -24,8 +24,7 @@ public class ActionsFragment extends android.support.v4.app.Fragment {
     public interface OnActionSelectedListener {
         public void onFixedAlarmPicked(int hour, int minute);
 
-        //Rest notification is optional - user can select to rest now
-        public void onFixedRestPicked(int hour, int minute, boolean notify);
+        public void onFixedRestPicked(int hour, int minute);
 
         public void onRepeatedAlarmsPicked();
 
@@ -62,6 +61,12 @@ public class ActionsFragment extends android.support.v4.app.Fragment {
         });
 
         repeatingAlarms = (Button) root.findViewById(R.id.repeating_alarms);
+        repeatingAlarms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onRepeatedAlarmsPicked();
+            }
+        });
         settings = (Button) root.findViewById(R.id.settings);
         return root;
     }
@@ -86,7 +91,7 @@ public class ActionsFragment extends android.support.v4.app.Fragment {
                 }
 
                 if (fixedRestTime) {
-                    listener.onFixedRestPicked(hours, mins, true);
+                    listener.onFixedRestPicked(hours, mins);
                 } else {
                     listener.onFixedAlarmPicked(hours, mins);
                 }
@@ -99,7 +104,7 @@ public class ActionsFragment extends android.support.v4.app.Fragment {
                 public void onClick(DialogInterface dialog, int which) {
                     Calendar c = Calendar.getInstance();
                     listener.onFixedRestPicked(c.get(Calendar.HOUR_OF_DAY),
-                            c.get(Calendar.MINUTE), false);
+                            c.get(Calendar.MINUTE));
                 }
             });
         }

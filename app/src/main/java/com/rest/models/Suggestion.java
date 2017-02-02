@@ -3,6 +3,7 @@ package com.rest.models;
 import android.support.annotation.NonNull;
 
 import com.rest.state.Settings;
+import com.rest.util.TimeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,36 +20,31 @@ public class Suggestion implements Comparable<Suggestion> {
     public static final String MINUTE = "minute";
     public static final String HOUR = "hour";
     public static final String MODE = "mode";
-    public static final String NOTIFY = "notify";
     public static final int MAX_CYCLES = 10;
 
-    // Optional null-value means that there will
-    // be no notification for resting time
-    private Date restTime;
-
-    private final Date alarmTime;
+    private final Date notifyAt;
+    private final Date alarmAt;
     private final int cycles;
     private final int sleepHours;
     private final int sleepMins;
 
-    public Suggestion(Date restTime, Date alarmTime, int cycles, int sleepHours, int sleepMins) {
-        this.restTime = restTime;
-        this.alarmTime = alarmTime;
+    public Suggestion(Date notifyAt, Date alarmAt, int cycles, int sleepHours, int sleepMins) {
+        this.notifyAt = notifyAt;
+        this.alarmAt = alarmAt;
         this.cycles = cycles;
         this.sleepHours = sleepHours;
         this.sleepMins = sleepMins;
     }
 
-    public Suggestion(int sleepMins, int sleepHours, int cycles, Date alarmTime) {
-        this.sleepMins = sleepMins;
-        this.sleepHours = sleepHours;
-        this.cycles = cycles;
-        this.alarmTime = alarmTime;
-    }
 
+    public String getFormattedTime(int time) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        if (time == Suggestion.FIXED_ALARM) {
+            return simpleDateFormat.format(notifyAt);
+        } else {
+            return simpleDateFormat.format(alarmAt);
+        }
 
-    public String getFormattedTime() {
-        return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(alarmTime);
     }
 
     public int getSleepMins() {
@@ -67,12 +63,12 @@ public class Suggestion implements Comparable<Suggestion> {
         return sleepHours * 60 + sleepMins;
     }
 
-    public Date getRestTime() {
-        return restTime;
+    public Date getNotifyAt() {
+        return notifyAt;
     }
 
-    public Date getAlarmTime() {
-        return alarmTime;
+    public Date getAlarmAt() {
+        return alarmAt;
     }
 
     @Override
@@ -90,7 +86,7 @@ public class Suggestion implements Comparable<Suggestion> {
         return Math.abs(totalMins() - Settings.OPTIMAL_SLEEP);
     }
 
-    public boolean restNotification() {
-        return restTime != null;
+    public boolean notifyToRest() {
+        return TimeUtils.intervalInMinutes(notifyAt, TimeUtils.now()) > Settings.REST_DELAY;
     }
 }

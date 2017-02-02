@@ -1,12 +1,17 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme" parent="@android:style/Theme.Material.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorBackground">@color/background_material_dark</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
+    <!-- Dialog theme -->
+    <style name="RateDialog" parent="@android:style/Theme.Material.Dialog.NoActionBar">
+        <item name="android:background">@color/colorPrimaryDark</item>
     </style>
 
 </resources>

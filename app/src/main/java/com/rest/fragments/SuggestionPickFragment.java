@@ -24,7 +24,6 @@ import java.util.List;
 
 public class SuggestionPickFragment extends android.support.v4.app.Fragment {
     private Date datetime;
-    private boolean notify;
     private int mode;
 
 
@@ -39,16 +38,16 @@ public class SuggestionPickFragment extends android.support.v4.app.Fragment {
 
         Calendar calendar = Calendar.getInstance(); //A calendar set to now
         //ToDo Test this
-        int now = calendar.get(Calendar.HOUR_OF_DAY);
+        int nowHours = calendar.get(Calendar.HOUR_OF_DAY);
+        int nowMins = calendar.get(Calendar.MINUTE);
         calendar.set(Calendar.HOUR_OF_DAY, hours);
         calendar.set(Calendar.MINUTE, mins);
 
-        if (now > hours) {
+        if (nowHours > hours || (nowHours == hours && nowMins > mins)) {
             calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
 
         datetime = new Date(calendar.getTimeInMillis());
-        notify = args.getBoolean(Suggestion.NOTIFY);
         mode = args.getInt(Suggestion.MODE);
     }
 
@@ -57,12 +56,12 @@ public class SuggestionPickFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.suggestion_fragment, container, false);
-        List<Suggestion> suggestions = RestCalc.calculate(datetime, mode, notify);
+        List<Suggestion> suggestions = RestCalc.calculate(datetime, mode);
 
         ListView listView = (ListView) root.findViewById(R.id.suggestions_list);
         final SuggestionAdapter suggestionAdapter = new SuggestionAdapter(getContext(),
                 R.layout.alarm_suggestion,
-                suggestions);
+                suggestions, mode);
         listView.setAdapter(suggestionAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
