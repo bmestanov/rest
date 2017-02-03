@@ -1,7 +1,6 @@
 package com.rest.state;
 
 import com.rest.models.Alarm;
-import com.rest.models.App;
 
 import java.util.ArrayList;
 import java.util.Calendar;

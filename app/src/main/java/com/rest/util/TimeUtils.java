@@ -38,11 +38,11 @@ public class TimeUtils {
                 Math.abs(nowHM.minute - thenHM.minute);
     }
 
-    static long addMinutes(long time, int minutes) {
+    public static long addMinutes(long time, int minutes) {
         return time + 1000 * 60 * minutes;
     }
 
-    static long subtractMinutes(long time, int minutes) {
+    public static long subtractMinutes(long time, int minutes) {
         return time - 1000 * 60 * minutes;
     }
 }

@@ -1,4 +1,4 @@
-package com.rest.models;
+package com.rest.state;
 
 import android.app.AlarmManager;
 import android.app.Application;

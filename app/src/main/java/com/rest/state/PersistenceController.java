@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.rest.models.App;
 
 /**
  * Created by Bilal on 08/I/2017

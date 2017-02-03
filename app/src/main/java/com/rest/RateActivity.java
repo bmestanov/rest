@@ -1,15 +1,15 @@
 package com.rest;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
 /**
  * Created on 01/02/2017
  */
-public class RateActivity extends AppCompatActivity {
+public class RateActivity extends Activity {
 
     RatingBar ratingBar;
 

@@ -1,5 +1,7 @@
 package com.rest.util;
 
+import android.util.Log;
+
 import com.rest.models.Suggestion;
 import com.rest.state.Settings;
 
@@ -18,11 +20,15 @@ import static com.rest.state.Settings.SLEEP_DELAY;
  * Created on 22/01/2017
  */
 public class RestCalc {
-    public static List<Suggestion> calculate(Date datetime, int mode) {
+    public static final String REST_CALCULATOR = RestCalc.class.getSimpleName();
+
+    public static List<Suggestion> calculate(Date time, int mode) {
         List<Suggestion> suggestions;
 
+        Log.d(REST_CALCULATOR, "Date received: " + time);
+
         suggestions = (mode == FIXED_ALARM) ?
-                forFixedAlarm(datetime) : forFixedRest(datetime);
+                forFixedAlarm(time) : forFixedRest(time);
 
         Collections.sort(suggestions); //Optimal times first
         return suggestions;
@@ -42,12 +48,12 @@ public class RestCalc {
 
             int sleepHours = sleepMins / 60;
 
-            long notifyAt = TimeUtils
+            long restAt = TimeUtils
                     .subtractMinutes(alarmAt,
-                            REST_DELAY + SLEEP_DELAY + cycles * CYCLE_LENGTH);
+                            SLEEP_DELAY + cycles * CYCLE_LENGTH);
 
-            if (now < notifyAt) {
-                suggestions.add(new Suggestion(new Date(notifyAt),
+            if (now < restAt) {
+                suggestions.add(new Suggestion(new Date(restAt),
                         new Date(alarmAt),
                         cycles,
                         sleepHours,
@@ -63,10 +69,7 @@ public class RestCalc {
     private static List<Suggestion> forFixedRest(Date restTime) {
         List<Suggestion> suggestions = new ArrayList<>(MAX_CYCLES);
 
-        final long now = restTime.getTime(); // Time of user going to rest
-
-        final long notifyAt = TimeUtils.subtractMinutes(now,
-                REST_DELAY); // Show notification before REST_DELAY mins
+        final long restAt = restTime.getTime(); // Time of user going to rest
 
         int cycles = 1, sleepMins = 0;
 
@@ -75,10 +78,10 @@ public class RestCalc {
 
             int sleepHours = sleepMins / 60;
 
-            long suggestedAlarmAt = TimeUtils.addMinutes(now,
+            long suggestedAlarmAt = TimeUtils.addMinutes(restAt,
                     SLEEP_DELAY + cycles * CYCLE_LENGTH);
 
-            Suggestion suggestion = new Suggestion(new Date(notifyAt),
+            Suggestion suggestion = new Suggestion(new Date(restAt),
                     new Date(suggestedAlarmAt), cycles,
                     sleepHours, sleepMins - sleepHours * 60);
             suggestions.add(suggestion);

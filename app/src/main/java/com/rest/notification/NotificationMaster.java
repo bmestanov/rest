@@ -15,6 +15,7 @@ import com.rest.util.TimeUtils;
  */
 
 public class NotificationMaster {
+    public static final String NOTIFICATION_MASTER = NotificationMaster.class.getSimpleName();
     public static final String NOTIFICATION_TYPE = "notification_type";
     public static final int EVENT_REST_TIME = 1;
     public static final int EVENT_ALARM = 2;
@@ -37,10 +38,14 @@ public class NotificationMaster {
             PendingIntent pendingRestIntent = PendingIntent
                     .getBroadcast(context, EVENT_REST_TIME, restNotificationIntent, 0);
             alarmManager.set(AlarmManager.RTC_WAKEUP,
-                    suggestion.getNotifyAt().getTime(),
+                    suggestion.getRestAt().getTime(),
                     pendingRestIntent);
 
-            Log.d(getClass().getSimpleName(), "Rest notification set to " + suggestion.getNotifyAt());
+            Log.d(NOTIFICATION_MASTER, "Rest notification set to "
+                    + suggestion.getRestAt());
+        } else {
+            Log.d(NOTIFICATION_MASTER, "No rest notification set. Time received: "
+                    + suggestion.getRestAt());
         }
 
         //Intent to fire when the alarm occurs
@@ -53,7 +58,7 @@ public class NotificationMaster {
                 suggestion.getAlarmAt().getTime(),
                 pendingAlarmIntent);
 
-        Log.d(getClass().getSimpleName(), "Alarm notification set to " + suggestion.getAlarmAt());
+        Log.d(NOTIFICATION_MASTER, "Alarm notification set to " + suggestion.getAlarmAt());
 
         //Intent to set the alarm itself
         Intent alarmIntent = new Intent(AlarmClock.ACTION_SET_ALARM);
@@ -64,6 +69,6 @@ public class NotificationMaster {
         alarmIntent.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
         context.startActivity(alarmIntent);
 
-        Log.d(getClass().getSimpleName(), "Alarm set to " + suggestion.getAlarmAt());
+        Log.d(NOTIFICATION_MASTER, "Alarm set to " + suggestion.getAlarmAt());
     }
 }

@@ -1,12 +1,13 @@
 package com.rest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.rest.fragments.ActionsFragment;
 import com.rest.fragments.SuggestionPickFragment;
-import com.rest.models.App;
+import com.rest.state.App;
 import com.rest.models.Suggestion;
 
 import static com.rest.fragments.ActionsFragment.OnActionSelectedListener;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onRepeatedAlarmsPicked() {
+                //For demo purposes
+                //MainActivity.this.startActivity(new Intent(MainActivity.this,RateActivity.class));
             }
 
             @Override

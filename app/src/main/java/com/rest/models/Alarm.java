@@ -11,6 +11,7 @@ import android.os.Parcelable;
 
 import com.rest.notification.AlarmReceiver;
 import com.rest.R;
+import com.rest.state.App;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;

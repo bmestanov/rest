@@ -22,14 +22,14 @@ public class Suggestion implements Comparable<Suggestion> {
     public static final String MODE = "mode";
     public static final int MAX_CYCLES = 10;
 
-    private final Date notifyAt;
+    private final Date restAt;
     private final Date alarmAt;
     private final int cycles;
     private final int sleepHours;
     private final int sleepMins;
 
-    public Suggestion(Date notifyAt, Date alarmAt, int cycles, int sleepHours, int sleepMins) {
-        this.notifyAt = notifyAt;
+    public Suggestion(Date restAt, Date alarmAt, int cycles, int sleepHours, int sleepMins) {
+        this.restAt = restAt;
         this.alarmAt = alarmAt;
         this.cycles = cycles;
         this.sleepHours = sleepHours;
@@ -40,7 +40,7 @@ public class Suggestion implements Comparable<Suggestion> {
     public String getFormattedTime(int time) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         if (time == Suggestion.FIXED_ALARM) {
-            return simpleDateFormat.format(notifyAt);
+            return simpleDateFormat.format(restAt);
         } else {
             return simpleDateFormat.format(alarmAt);
         }
@@ -63,8 +63,8 @@ public class Suggestion implements Comparable<Suggestion> {
         return sleepHours * 60 + sleepMins;
     }
 
-    public Date getNotifyAt() {
-        return notifyAt;
+    public Date getRestAt() {
+        return restAt;
     }
 
     public Date getAlarmAt() {
@@ -87,6 +87,10 @@ public class Suggestion implements Comparable<Suggestion> {
     }
 
     public boolean notifyToRest() {
-        return TimeUtils.intervalInMinutes(notifyAt, TimeUtils.now()) > Settings.REST_DELAY;
+        long notifyAt = TimeUtils
+                .subtractMinutes(restAt.getTime(), Settings.REST_DELAY);
+        Date notifyDate = new Date(notifyAt);
+        return notifyDate.after(TimeUtils.now()) &&
+                TimeUtils.intervalInMinutes(notifyDate, TimeUtils.now()) > Settings.MIN_REST_DELAY;
     }
 }

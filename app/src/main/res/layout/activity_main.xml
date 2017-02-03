@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
     android:weightSum="1">
 
@@ -10,8 +11,7 @@
         android:id="@+id/main_logo"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="@color/colorPrimaryDark"
-        android:elevation="4dp"
+        android:elevation="8dp"
         app:srcCompat="@drawable/ic_notification" />
 
     <FrameLayout
