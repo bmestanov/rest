@@ -4,13 +4,11 @@ import android.app.AlarmManager;
 import android.app.Application;
 import android.util.Log;
 
-import com.rest.state.PersistenceController;
-import com.rest.state.State;
-
 /**
  * Created on 08/01/2017
  */
 public class App extends Application {
+    private static final String APP = App.class.getSimpleName();
     private static AlarmManager alarmManager;
     private static State state;
     private static PersistenceController pController;
@@ -27,16 +25,9 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Log.d(APP, "Starting up");
         pController = new PersistenceController(this);
-        State initialState = pController.getSavedState();
-
-        if (initialState == null) {
-            initialState = State.Default.build();
-        }
-
-        Log.d(getClass().getSimpleName(), "Initial state built");
-        state = initialState;
-        state.removePast();
+        pController.getSavedState();
     }
 
 

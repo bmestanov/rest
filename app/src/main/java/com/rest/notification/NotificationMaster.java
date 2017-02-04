@@ -8,6 +8,7 @@ import android.provider.AlarmClock;
 import android.util.Log;
 
 import com.rest.models.Suggestion;
+import com.rest.state.Settings;
 import com.rest.util.TimeUtils;
 
 /**
@@ -35,10 +36,12 @@ public class NotificationMaster {
             Intent restNotificationIntent = new Intent(context, AlarmReceiver.class);
             restNotificationIntent.putExtra(NOTIFICATION_TYPE, EVENT_REST_TIME);
 
+            long notificationTime = TimeUtils.subtractMinutes(suggestion.getRestAt().getTime()
+                    , Settings.REST_DELAY);
             PendingIntent pendingRestIntent = PendingIntent
                     .getBroadcast(context, EVENT_REST_TIME, restNotificationIntent, 0);
             alarmManager.set(AlarmManager.RTC_WAKEUP,
-                    suggestion.getRestAt().getTime(),
+                    notificationTime,
                     pendingRestIntent);
 
             Log.d(NOTIFICATION_MASTER, "Rest notification set to "

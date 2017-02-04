@@ -1,19 +1,19 @@
 package com.rest;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.rest.fragments.ActionsFragment;
+import com.rest.fragments.SettingsFragment;
 import com.rest.fragments.SuggestionPickFragment;
-import com.rest.state.App;
 import com.rest.models.Suggestion;
+import com.rest.state.App;
 
 import static com.rest.fragments.ActionsFragment.OnActionSelectedListener;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static final String MAIN = MainActivity.class.getSimpleName();
     private OnActionSelectedListener listener;
 
     @Override
@@ -45,11 +45,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSettingsPicked() {
-
+                setSettingsFragment();
             }
         };
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         ActionsFragment actionsFragment = new ActionsFragment();
         actionsFragment.setListener(listener);
 
@@ -57,8 +57,18 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
+    private void setSettingsFragment() {
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        SettingsFragment settingsFragment =
+                new SettingsFragment();
+
+        ft.replace(R.id.actions_fragment, settingsFragment);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
     private void setSuggestionFragment(int hours, int mins, int mode) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         SuggestionPickFragment suggestionPickFragment =
                 new SuggestionPickFragment();
 
@@ -81,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(MAIN, "Shutting down");
         //Saving the state.. just in case
         App.getpController().saveState();
     }

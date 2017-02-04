@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:defaultValue="90"
+        android:enabled="false"
+        android:key="@string/cycle_length_sharedpref_key"
+        android:numeric="integer"
+        android:title="@string/cycle_length" />
+    <EditTextPreference
+        android:defaultValue="15"
+        android:inputType="number"
+        android:key="@string/rest_delay_sharedpref_key"
+        android:numeric="integer"
+        android:summary="The typical time it takes you to get ready to sleep."
+        android:title="@string/rest_delay" />
+    <EditTextPreference
+        android:defaultValue="20"
+        android:inputType="number"
+        android:key="@string/sleep_delay_sharedpref_key"
+        android:numeric="integer"
+        android:summary="The typical time it takes you to fall asleep when resting (average is 20 minutes)."
+        android:title="@string/sleep_delay" />
+</PreferenceScreen>

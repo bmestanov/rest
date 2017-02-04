@@ -1,5 +1,6 @@
 package com.rest.fragments;
 
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,17 +20,7 @@ import java.util.Calendar;
  * Created on 24/01/2017
  */
 
-public class ActionsFragment extends android.support.v4.app.Fragment {
-
-    public interface OnActionSelectedListener {
-        public void onFixedAlarmPicked(int hour, int minute);
-
-        public void onFixedRestPicked(int hour, int minute);
-
-        public void onRepeatedAlarmsPicked();
-
-        public void onSettingsPicked();
-    }
+public class ActionsFragment extends Fragment {
 
     Button fixedWakeup, fixedRestTime, repeatingAlarms, settings;
     OnActionSelectedListener listener;
@@ -68,6 +59,12 @@ public class ActionsFragment extends android.support.v4.app.Fragment {
             }
         });
         settings = (Button) root.findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onSettingsPicked();
+            }
+        });
         return root;
     }
 
@@ -110,5 +107,15 @@ public class ActionsFragment extends android.support.v4.app.Fragment {
         }
 
         builder.create().show();
+    }
+
+    public interface OnActionSelectedListener {
+        public void onFixedAlarmPicked(int hour, int minute);
+
+        public void onFixedRestPicked(int hour, int minute);
+
+        public void onRepeatedAlarmsPicked();
+
+        public void onSettingsPicked();
     }
 }

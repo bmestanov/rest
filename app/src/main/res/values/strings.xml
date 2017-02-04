@@ -9,4 +9,11 @@
     <string name="day_concat">Days</string>
     <string name="logo">logo</string>
     <string name="now">Now</string>
+    <string name="cycle_length">Sleep cycle length</string>
+    <string name="rest_delay">Rest delay</string>
+    <string name="sleep_delay">Sleep delay</string>
+    <string name="sleep_delay_sharedpref_key">sleep_delay</string>
+    <string name="rest_delay_sharedpref_key">rest_delay</string>
+    <string name="cycle_length_summary">This changes over time as rest adapts to you. Currently is</string>
+    <string name="cycle_length_sharedpref_key">cycle_length</string>
 </resources>

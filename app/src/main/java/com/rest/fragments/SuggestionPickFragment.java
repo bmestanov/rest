@@ -1,5 +1,6 @@
 package com.rest.fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -22,7 +23,7 @@ import java.util.List;
  * Created on 24/01/2017
  */
 
-public class SuggestionPickFragment extends android.support.v4.app.Fragment {
+public class SuggestionPickFragment extends Fragment {
     private Date datetime;
     private int mode;
 
@@ -69,6 +70,7 @@ public class SuggestionPickFragment extends android.support.v4.app.Fragment {
                 new NotificationMaster(getContext(), suggestionAdapter.getItem(position))
                         .scheduleNotifications();
                 getActivity().onBackPressed();
+                //getActivity().finish(); // We're done with the app
             }
         });
         return root;

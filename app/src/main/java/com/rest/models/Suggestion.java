@@ -87,10 +87,8 @@ public class Suggestion implements Comparable<Suggestion> {
     }
 
     public boolean notifyToRest() {
-        long notifyAt = TimeUtils
-                .subtractMinutes(restAt.getTime(), Settings.REST_DELAY);
-        Date notifyDate = new Date(notifyAt);
-        return notifyDate.after(TimeUtils.now()) &&
-                TimeUtils.intervalInMinutes(notifyDate, TimeUtils.now()) > Settings.MIN_REST_DELAY;
+        int interval = TimeUtils.intervalInMinutes(getRestAt(), TimeUtils.now());
+        return getRestAt().after(TimeUtils.now()) &&
+                interval > Settings.MIN_REST_DELAY;
     }
 }
