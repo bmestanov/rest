@@ -21,13 +21,13 @@ public class State {
 
     public void addAlarm(Alarm alarm) {
         activeAlarms.add(alarm);
-        App.getpController().saveState();
+        App.getpController().saveSettings();
         //MainActivity.alarmsAdapter.notifyDataSetChanged();
     }
 
     public void cancelAlarm(Alarm alarm) {
         activeAlarms.remove(alarm);
-        App.getpController().saveState();
+        App.getpController().saveSettings();
         //MainActivity.alarmsAdapter.notifyDataSetChanged();
     }
 

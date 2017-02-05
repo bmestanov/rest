@@ -55,7 +55,7 @@ public class ActionsFragment extends Fragment {
         repeatingAlarms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //listener.onRepeatedAlarmsPicked();
+                listener.onRepeatedAlarmsPicked();
             }
         });
         settings = (Button) root.findViewById(R.id.settings);

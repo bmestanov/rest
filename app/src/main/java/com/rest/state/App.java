@@ -27,7 +27,7 @@ public class App extends Application {
 
         Log.d(APP, "Starting up");
         pController = new PersistenceController(this);
-        pController.getSavedState();
+        pController.loadSettings();
     }
 
 

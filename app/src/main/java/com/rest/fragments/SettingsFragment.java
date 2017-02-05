@@ -7,6 +7,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
 import com.rest.R;
+import com.rest.state.CycleController;
 import com.rest.state.Settings;
 
 /**
@@ -23,9 +24,9 @@ public class SettingsFragment extends PreferenceFragment
         addPreferencesFromResource(R.xml.settings_fragment);
 
         //Setting up current values
-        Preference cycleLength = findPreference(Settings.Key.CYCLE_LENGTH_KEY);
+        Preference cycleLength = findPreference(CycleController.Constants.CYCLE_LENGTH_KEY);
         cycleLength.setSummary(getString(R.string.cycle_length_summary) +
-                String.format(" %d minutes.", Settings.CYCLE_LENGTH));
+                String.format(" %d minutes.", CycleController.CYCLE_LENGTH));
     }
 
     @Override

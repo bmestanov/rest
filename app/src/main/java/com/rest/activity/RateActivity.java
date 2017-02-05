@@ -1,10 +1,13 @@
-package com.rest;
+package com.rest.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.RatingBar;
 import android.widget.Toast;
+
+import com.rest.R;
+import com.rest.state.CycleController;
 
 /**
  * Created on 01/02/2017
@@ -22,7 +25,7 @@ public class RateActivity extends Activity {
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                // ... does something with the  result
+                CycleController.onReceiveRating(rating);
                 Toast.makeText(RateActivity.this,
                         "rest is optimizing. Have a great day!", Toast.LENGTH_SHORT).show();
                 finish();

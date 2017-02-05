@@ -3,7 +3,6 @@ package com.rest.util;
 import android.util.Log;
 
 import com.rest.models.Suggestion;
-import com.rest.state.Settings;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,8 +11,7 @@ import java.util.List;
 
 import static com.rest.models.Suggestion.FIXED_ALARM;
 import static com.rest.models.Suggestion.MAX_CYCLES;
-import static com.rest.state.Settings.CYCLE_LENGTH;
-import static com.rest.state.Settings.REST_DELAY;
+import static com.rest.state.CycleController.CYCLE_LENGTH;
 import static com.rest.state.Settings.SLEEP_DELAY;
 
 /**

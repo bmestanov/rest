@@ -16,4 +16,6 @@
     <string name="rest_delay_sharedpref_key">rest_delay</string>
     <string name="cycle_length_summary">This changes over time as rest adapts to you. Currently is</string>
     <string name="cycle_length_sharedpref_key">cycle_length</string>
+    <string name="align_direction_sharedpref_key">align_direction</string>
+    <string name="confidence_sharedpref_key">confidence</string>
 </resources>

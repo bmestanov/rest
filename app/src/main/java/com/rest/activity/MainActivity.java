@@ -1,9 +1,11 @@
-package com.rest;
+package com.rest.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.rest.R;
 import com.rest.fragments.ActionsFragment;
 import com.rest.fragments.SettingsFragment;
 import com.rest.fragments.SuggestionPickFragment;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRepeatedAlarmsPicked() {
                 //For demo purposes
-                //MainActivity.this.startActivity(new Intent(MainActivity.this,RateActivity.class));
+                MainActivity.this.startActivity(new Intent(MainActivity.this, RateActivity.class));
             }
 
             @Override
@@ -93,6 +95,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         Log.d(MAIN, "Shutting down");
         //Saving the state.. just in case
-        App.getpController().saveState();
+        App.getpController().saveSettings();
     }
 }
