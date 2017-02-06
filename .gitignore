@@ -22,3 +22,10 @@ hs_err_pid*
 /captures
 .externalNativeBuild
 
+# Other files
+*.properties
+*.bat
+
+gradlew
+
+/gradle

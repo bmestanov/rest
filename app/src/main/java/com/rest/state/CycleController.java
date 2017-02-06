@@ -54,26 +54,34 @@ public class CycleController {
 
     }
 
-    //ToDo Test
-    private static int ensureRange(float value, int min, int max) {
+    static int ensureRange(float value, int min, int max) {
         return Math.min(Math.max((int) value, min), max);
     }
 
-    private static float getJumpValue(int rating) {
+    static float getJumpValue(int rating) {
         return (Constants.MAX_RATING - rating) * ALIGN_DIRECTION / (float) CONFIDENCE;
+    }
+
+    public static void reset() {
+        CYCLE_LENGTH = Constants.DEFAULT_CYCLE_LENGTH;
+        CONFIDENCE = Constants.DEFAULT_CONFIDENCE;
+        ALIGN_DIRECTION = Constants.DEFAULT_ALIGN_DIRECTION;
+
+        App.getpController().saveCycleVariables();
     }
 
     public static class Constants {
         public static final int DEFAULT_ALIGN_DIRECTION = 1;
         public static final int DEFAULT_CONFIDENCE = 22;
+        public static final int DEFAULT_CYCLE_LENGTH = 90;
         public static final int MAX_RATING = 5;
         public static final int AVG_RATING = 3;
         public static final int ABSOLUTE_MIN_CYCLE_LENGTH = 70;
         public static final int ABSOLUTE_MAX_CYCLE_LENGTH = 120;
         public static final int MIN_CONFIDENCE = 4;
         public static final int MAX_CONFIDENCE = 40;
-        public static final String ALIGN_DIRECTION_KEY = "align_direction";
 
+        public static final String ALIGN_DIRECTION_KEY = "align_direction";
         public static final String CONFIDENCE_KEY = "confidence";
         public static final String CYCLE_LENGTH_KEY = "cycle_length";
     }
