@@ -1,6 +1,5 @@
 package com.rest.state;
 
-import android.app.AlarmManager;
 import android.app.Application;
 import android.util.Log;
 
@@ -9,9 +8,8 @@ import android.util.Log;
  */
 public class App extends Application {
     private static final String APP = App.class.getSimpleName();
-    private static AlarmManager alarmManager;
-    private static State state;
-    private static PersistenceController pController;
+    static State state;
+    static PersistenceController pController;
 
     public static PersistenceController getpController() {
         return pController;
@@ -27,8 +25,7 @@ public class App extends Application {
 
         Log.d(APP, "Starting up");
         pController = new PersistenceController(this);
-        pController.loadSettings();
+        pController.loadPreferences();
+        pController.loadState();
     }
-
-
 }

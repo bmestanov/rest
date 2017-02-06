@@ -18,4 +18,8 @@
     <string name="cycle_length_sharedpref_key">cycle_length</string>
     <string name="align_direction_sharedpref_key">align_direction</string>
     <string name="confidence_sharedpref_key">confidence</string>
+    <string name="reset_cycle_length">Reset cycle length</string>
+    <string name="warn_reset">This will reset your cycle length back to 90 minutes. Proceed?</string>
+    <string name="no_suggestions">No suggestions available</string>
+    <string name="no_repeating_alarms">No repeating alarms set</string>
 </resources>

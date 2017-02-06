@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.rest.state.Settings.Default;
-import com.rest.state.Settings.Key;
+import com.google.gson.Gson;
+import com.rest.state.Preferences.Default;
+import com.rest.state.Preferences.Key;
 
 /**
  * Created by Bilal on 08/I/2017
@@ -20,31 +21,31 @@ public class PersistenceController {
         mPreferences = context.getSharedPreferences(SHARED_PREFS, 0);
     }
 
-    public void loadSettings() {
+    public void loadPreferences() {
         //Also initialized cycle length as it'll be used in calculations
         CycleController.CYCLE_LENGTH = mPreferences.getInt(
                 CycleController.Constants.CYCLE_LENGTH_KEY,
                 Default.CYCLE_LENGTH);
 
-        Settings.REST_DELAY = mPreferences.getInt(Key.REST_DELAY_KEY,
+        Preferences.REST_DELAY = mPreferences.getInt(Key.REST_DELAY_KEY,
                 Default.REST_DELAY);
-        Settings.SLEEP_DELAY = mPreferences.getInt(Key.SLEEP_DELAY_KEY,
+        Preferences.SLEEP_DELAY = mPreferences.getInt(Key.SLEEP_DELAY_KEY,
                 Default.SLEEP_DELAY);
 
         Log.d(PERSISTENCE_CTRL, "Cycle length received: " + CycleController.CYCLE_LENGTH);
-        Log.d(PERSISTENCE_CTRL, "Rest delay received: " + Settings.REST_DELAY);
-        Log.d(PERSISTENCE_CTRL, "Sleep delay received: " + Settings.SLEEP_DELAY);
+        Log.d(PERSISTENCE_CTRL, "Rest delay received: " + Preferences.REST_DELAY);
+        Log.d(PERSISTENCE_CTRL, "Sleep delay received: " + Preferences.SLEEP_DELAY);
     }
 
-    public void saveSettings() {
+    public void savePreferences() {
         SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(Key.REST_DELAY_KEY, Settings.REST_DELAY);
-        editor.putInt(Key.SLEEP_DELAY_KEY, Settings.SLEEP_DELAY);
+        editor.putInt(Key.REST_DELAY_KEY, Preferences.REST_DELAY);
+        editor.putInt(Key.SLEEP_DELAY_KEY, Preferences.SLEEP_DELAY);
 
         editor.apply();
 
-        Log.d(PERSISTENCE_CTRL, "Rest delay saved: " + Settings.REST_DELAY);
-        Log.d(PERSISTENCE_CTRL, "Sleep delay saved: " + Settings.SLEEP_DELAY);
+        Log.d(PERSISTENCE_CTRL, "Rest delay saved: " + Preferences.REST_DELAY);
+        Log.d(PERSISTENCE_CTRL, "Sleep delay saved: " + Preferences.SLEEP_DELAY);
     }
 
     public void loadCycleVariables() {
@@ -73,5 +74,25 @@ public class PersistenceController {
                 CycleController.CYCLE_LENGTH);
 
         editor.apply();
+    }
+
+    public void loadState() {
+        String savedState = mPreferences.getString(State.STATE, null);
+
+        App.state = new Gson().fromJson(savedState, State.class);
+
+        if (App.state == null) {
+            App.state = new State();
+        }
+        Log.d(PERSISTENCE_CTRL, "State loaded: " + savedState);
+    }
+
+    public void saveState() {
+        String currentState = new Gson().toJson(App.state);
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(State.STATE, currentState);
+        editor.apply();
+
+        Log.d(PERSISTENCE_CTRL, "State saved: " + currentState);
     }
 }

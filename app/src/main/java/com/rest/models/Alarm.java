@@ -1,113 +1,48 @@
 package com.rest.models;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
 
-import com.rest.notification.AlarmReceiver;
 import com.rest.R;
 import com.rest.state.App;
+import com.rest.util.TimeUtils;
 
 import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Bilal on 08/I/2017
  */
 
-public class Alarm implements Parcelable {
+public class Alarm {
     private static final String ALARM_EXTRA = "ALARM_EXTRA";
-
-    //////////////////////////////
-    // Parcelable apis
-    //////////////////////////////
-
-
-    private Alarm(Parcel p) {
-        this.dateTime = p.readLong();
-        this.days = new DaysOfWeek(p.readInt());
-        this.label = p.readString();
-        this.active = p.readInt() == 1;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(dateTime);
-        dest.writeInt(days.getCoded());
-        dest.writeString(label);
-        dest.writeInt(active ? 1 : 0);
-    }
-
-    public static final Parcelable.Creator<Alarm> CREATOR
-            = new Parcelable.Creator<Alarm>() {
-        public Alarm createFromParcel(Parcel p) {
-            return new Alarm(p);
-        }
-
-        public Alarm[] newArray(int size) {
-            return new Alarm[size];
-        }
-    };
-
-    //////////////////////////////
 
     private long dateTime;
     private DaysOfWeek days;
     private String label;
-    private boolean active;
 
 
-    public Alarm(long dateTime, List<Integer> days, String label, boolean active) {
-        this.dateTime = dateTime;
-        this.label = label;
-        this.active = active;
-        this.days = new DaysOfWeek(DaysOfWeek.DAY_MAP[1]);
+    public Alarm() {
+    }
+
+    public static Alarm fromPickerResult(int hour, int minute, DaysOfWeek days) {
+        Alarm alarm = new Alarm();
+
+        alarm.days = days;
+        alarm.dateTime = TimeUtils.fromHourMinute(hour, minute).getTime();
+        return alarm;
     }
 
     public void set(Context context) {
-        //Add this alarm to the app state
         App.getState().addAlarm(this);
+        App.getpController().saveState();
 
-        //Add a pending intent to the alarmManager
-        Intent myIntent = new Intent(context, AlarmReceiver.class);
-        myIntent.putExtra(ALARM_EXTRA, this);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent, 0);
-        ((AlarmManager) context.getSystemService(Context.ALARM_SERVICE))
-                .set(AlarmManager.RTC, dateTime, pendingIntent);
-        //MainActivity.alarmsAdapter.notifyDataSetChanged();
+        //Go call the notification master here
     }
 
     public void cancel(Context context) {
-        //Remove this alarm from the app state
         App.getState().cancelAlarm(this);
-
-        //Remove the pending intent
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
-        ((AlarmManager) context.getSystemService(Context.ALARM_SERVICE))
-                .cancel(sender);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            intent = new Intent("android.intent.action.ALARM_CHANGED");
-            intent.putExtra("alarmSet", false);
-            context.sendBroadcast(intent);
-        }
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+        App.getpController().saveState();
     }
 
     public long getTime() {
@@ -117,11 +52,11 @@ public class Alarm implements Parcelable {
     @SuppressLint("SimpleDateFormat")
     @Override
     public String toString() {
-        return new SimpleDateFormat("HH:mm").format(new Date(dateTime));
+        return TimeUtils.format(TimeUtils.HH_MM_FORMAT, dateTime);
     }
 
-    public boolean isActive() {
-        return active;
+    public String getDays(Context context) {
+        return days.toString(context, false);
     }
 
     /*
@@ -129,7 +64,7 @@ public class Alarm implements Parcelable {
             as inspired by Google's Alarm Clock implementation
 
     */
-    private static class DaysOfWeek {
+    public static class DaysOfWeek {
         private static int[] DAY_MAP = new int[]{
                 Calendar.MONDAY,
                 Calendar.TUESDAY,
@@ -143,20 +78,19 @@ public class Alarm implements Parcelable {
 
         private int mDays;
 
-        DaysOfWeek(int days) {
-            mDays = days;
+        public DaysOfWeek() {
         }
 
         public String toString(Context context, boolean showNever) {
-            StringBuilder ret = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
 
-            // no days
+            // no days (0000000)
             if (mDays == 0) {
                 return showNever ?
                         context.getText(R.string.never).toString() : "";
             }
 
-            // every day
+            // every day (1111111)
             if (mDays == 0x7f) {
                 return context.getText(R.string.every_day).toString();
             }
@@ -165,7 +99,7 @@ public class Alarm implements Parcelable {
             int dayCount = 0, days = mDays;
             while (days > 0) {
                 if ((days & 1) == 1) dayCount++;
-                days >>= 1;
+                days = days >> 1;
             }
 
             // short or long form?
@@ -177,13 +111,12 @@ public class Alarm implements Parcelable {
             // selected days
             for (int i = 0; i < 7; i++) {
                 if ((mDays & (1 << i)) != 0) {
-                    ret.append(dayList[DAY_MAP[i]]);
+                    stringBuilder.append(dayList[DAY_MAP[i]]);
                     dayCount -= 1;
-                    if (dayCount > 0) ret.append(
-                            context.getText(R.string.day_concat));
+                    if (dayCount > 0) stringBuilder.append(" ");
                 }
             }
-            return ret.toString();
+            return stringBuilder.toString();
         }
 
         private boolean isSet(int day) {

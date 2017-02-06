@@ -12,7 +12,7 @@ import java.util.List;
 import static com.rest.models.Suggestion.FIXED_ALARM;
 import static com.rest.models.Suggestion.MAX_CYCLES;
 import static com.rest.state.CycleController.CYCLE_LENGTH;
-import static com.rest.state.Settings.SLEEP_DELAY;
+import static com.rest.state.Preferences.SLEEP_DELAY;
 
 /**
  * Created on 22/01/2017

@@ -25,14 +25,10 @@ public class ActionsFragment extends Fragment {
     Button fixedWakeup, fixedRestTime, repeatingAlarms, settings;
     OnActionSelectedListener listener;
 
-    public void setListener(OnActionSelectedListener listener) {
-        this.listener = listener;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.actions_fragment, container, false);
+        View root = inflater.inflate(R.layout.fragment_actions, container, false);
 
 
         fixedWakeup = (Button) root.findViewById(R.id.fixed_wakeup);
@@ -66,6 +62,10 @@ public class ActionsFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    public void setListener(OnActionSelectedListener listener) {
+        this.listener = listener;
     }
 
     private void showTimePicker(final boolean fixedRestTime) {

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDarker">
+
+    <TextView
+        android:id="@+id/no_repeating_alarms"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_suggestions"
+        android:textAlignment="center"
+        android:textStyle="italic"
+        android:visibility="gone" />
+
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/suggestions_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</FrameLayout>

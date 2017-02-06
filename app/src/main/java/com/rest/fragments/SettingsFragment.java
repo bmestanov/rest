@@ -8,7 +8,7 @@ import android.preference.PreferenceFragment;
 
 import com.rest.R;
 import com.rest.state.CycleController;
-import com.rest.state.Settings;
+import com.rest.state.Preferences;
 
 /**
  * Created on 04/02/2017
@@ -21,7 +21,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.settings_fragment);
+        addPreferencesFromResource(R.xml.fragment_settings);
 
         //Setting up current values
         Preference cycleLength = findPreference(CycleController.Constants.CYCLE_LENGTH_KEY);
@@ -45,11 +45,11 @@ public class SettingsFragment extends PreferenceFragment
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(Settings.Key.REST_DELAY_KEY)) {
-            Settings.REST_DELAY = Integer.valueOf(sharedPreferences
+        if (key.equals(Preferences.Key.REST_DELAY_KEY)) {
+            Preferences.REST_DELAY = Integer.valueOf(sharedPreferences
                     .getString(key, ""));
-        } else if (key.equals(Settings.Key.SLEEP_DELAY_KEY)) {
-            Settings.SLEEP_DELAY = Integer.valueOf(sharedPreferences
+        } else if (key.equals(Preferences.Key.SLEEP_DELAY_KEY)) {
+            Preferences.SLEEP_DELAY = Integer.valueOf(sharedPreferences
                     .getString(key, ""));
         }
     }

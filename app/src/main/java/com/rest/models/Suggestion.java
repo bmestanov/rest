@@ -2,12 +2,10 @@ package com.rest.models;
 
 import android.support.annotation.NonNull;
 
-import com.rest.state.Settings;
+import com.rest.state.Preferences;
 import com.rest.util.TimeUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created on 24/01/2017
@@ -37,14 +35,10 @@ public class Suggestion implements Comparable<Suggestion> {
     }
 
 
-    public String getFormattedTime(int time) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        if (time == Suggestion.FIXED_ALARM) {
-            return simpleDateFormat.format(restAt);
-        } else {
-            return simpleDateFormat.format(alarmAt);
-        }
-
+    public String getFormattedTime(int mode) {
+        return (mode == FIXED_ALARM) ?
+                TimeUtils.format(TimeUtils.HH_MM_FORMAT, restAt) :
+                TimeUtils.format(TimeUtils.HH_MM_FORMAT, alarmAt);
     }
 
     public int getSleepMins() {
@@ -83,12 +77,12 @@ public class Suggestion implements Comparable<Suggestion> {
     }
 
     private int optimality() {
-        return Math.abs(totalMins() - Settings.OPTIMAL_SLEEP);
+        return Math.abs(totalMins() - Preferences.OPTIMAL_SLEEP);
     }
 
     public boolean notifyToRest() {
         int interval = TimeUtils.intervalInMinutes(getRestAt(), TimeUtils.now());
         return getRestAt().after(TimeUtils.now()) &&
-                interval > Settings.MIN_REST_DELAY;
+                interval > Preferences.MIN_REST_DELAY;
     }
 }

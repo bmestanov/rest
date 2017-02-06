@@ -1,12 +1,13 @@
 package com.rest.activity;
 
-import android.content.Intent;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.rest.R;
 import com.rest.fragments.ActionsFragment;
+import com.rest.fragments.RepeatingAlarmsFragment;
 import com.rest.fragments.SettingsFragment;
 import com.rest.fragments.SuggestionPickFragment;
 import com.rest.models.Suggestion;
@@ -31,54 +32,48 @@ public class MainActivity extends AppCompatActivity {
         listener = new OnActionSelectedListener() {
             @Override
             public void onFixedAlarmPicked(int hour, int minute) {
-                setSuggestionFragment(hour, minute, Suggestion.FIXED_ALARM);
+                SuggestionPickFragment suggestionPickFragment =
+                        new SuggestionPickFragment();
+
+                suggestionPickFragment.setArguments(
+                        makeBundle(hour, minute, Suggestion.FIXED_ALARM));
+
+                setFragment(suggestionPickFragment, true);
             }
 
             @Override
             public void onFixedRestPicked(int hour, int minute) {
-                setSuggestionFragment(hour, minute, Suggestion.FIXED_REST);
+                SuggestionPickFragment suggestionPickFragment =
+                        new SuggestionPickFragment();
+
+                suggestionPickFragment.setArguments(
+                        makeBundle(hour, minute, Suggestion.FIXED_REST));
+
+                setFragment(suggestionPickFragment, true);
             }
 
             @Override
             public void onRepeatedAlarmsPicked() {
-                //For demo purposes
-                MainActivity.this.startActivity(new Intent(MainActivity.this, RateActivity.class));
+                setFragment(new RepeatingAlarmsFragment(), true);
             }
 
             @Override
             public void onSettingsPicked() {
-                setSettingsFragment();
+                setFragment(new SettingsFragment(), true);
             }
         };
 
-        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
         ActionsFragment actionsFragment = new ActionsFragment();
         actionsFragment.setListener(listener);
-
-        ft.add(R.id.actions_fragment, actionsFragment);
-        ft.commit();
+        setFragment(actionsFragment, false);
     }
 
-    private void setSettingsFragment() {
+    private void setFragment(Fragment fragment, boolean pushToStack) {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        SettingsFragment settingsFragment =
-                new SettingsFragment();
 
-        ft.replace(R.id.actions_fragment, settingsFragment);
-        ft.addToBackStack(null);
-        ft.commit();
-    }
-
-    private void setSuggestionFragment(int hours, int mins, int mode) {
-        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        SuggestionPickFragment suggestionPickFragment =
-                new SuggestionPickFragment();
-
-        suggestionPickFragment.setArguments(
-                makeBundle(hours, mins, mode));
-
-        ft.replace(R.id.actions_fragment, suggestionPickFragment);
-        ft.addToBackStack(null);
+        ft.replace(R.id.actions_fragment, fragment);
+        if (pushToStack)
+            ft.addToBackStack(null);
         ft.commit();
     }
 
@@ -95,6 +90,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         Log.d(MAIN, "Shutting down");
         //Saving the state.. just in case
-        App.getpController().saveSettings();
+        App.getpController().savePreferences();
     }
 }

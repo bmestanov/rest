@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:weightSum="1"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:visibility="visible"
+        android:weightSum="1">
 
         <TextView
+            android:id="@+id/suggestedAlarmTime"
+            style="@style/Base.TextAppearance.AppCompat.Large"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/suggestedAlarmTime"
-            tools:text="16:02"
-            style="@style/Base.TextAppearance.AppCompat.Large"
+            android:layout_weight=".5"
             android:textSize="34sp"
             android:textStyle="bold"
-            android:layout_weight=".5" />
+            tools:text="16:02" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            tools:text="12h 14m of sleep"
             android:id="@+id/amountSleep"
-            android:gravity="center"
-            android:layout_weight=".3" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/cycleCount"
-            android:layout_weight=".2"
-            tools:text="7 cycles"
+            android:layout_weight=".3"
             android:gravity="center"
-            android:textStyle="normal|bold" />
+            tools:text="12h 14m of sleep" />
+
+        <TextView
+            android:id="@+id/cycleCount"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".2"
+            android:gravity="center"
+            android:textStyle="normal|bold"
+            tools:text="7 cycles" />
     </LinearLayout>
 
 </LinearLayout>

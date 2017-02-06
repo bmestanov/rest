@@ -14,8 +14,8 @@ import com.rest.adapters.SuggestionAdapter;
 import com.rest.models.Suggestion;
 import com.rest.notification.NotificationMaster;
 import com.rest.util.RestCalc;
+import com.rest.util.TimeUtils;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,18 +37,7 @@ public class SuggestionPickFragment extends Fragment {
         int hours = args.getInt(Suggestion.HOUR);
         int mins = args.getInt(Suggestion.MINUTE);
 
-        Calendar calendar = Calendar.getInstance(); //A calendar set to now
-        //ToDo Test this
-        int nowHours = calendar.get(Calendar.HOUR_OF_DAY);
-        int nowMins = calendar.get(Calendar.MINUTE);
-        calendar.set(Calendar.HOUR_OF_DAY, hours);
-        calendar.set(Calendar.MINUTE, mins);
-
-        if (nowHours > hours || (nowHours == hours && nowMins > mins)) {
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-        }
-
-        datetime = new Date(calendar.getTimeInMillis());
+        datetime = TimeUtils.fromHourMinute(hours, mins);
         mode = args.getInt(Suggestion.MODE);
     }
 
@@ -56,18 +45,24 @@ public class SuggestionPickFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.suggestion_fragment, container, false);
+        View root = inflater.inflate(R.layout.fragment_suggestions, container, false);
         List<Suggestion> suggestions = RestCalc.calculate(datetime, mode);
 
         ListView listView = (ListView) root.findViewById(R.id.suggestions_list);
-        final SuggestionAdapter suggestionAdapter = new SuggestionAdapter(getContext(),
-                R.layout.alarm_suggestion,
+
+        if (suggestions.isEmpty()) { // Show no suggestion TextView
+            listView.setVisibility(View.GONE);
+            root.findViewById(R.id.no_repeating_alarms).setVisibility(View.VISIBLE);
+            return root;
+        }
+
+        final SuggestionAdapter suggestionAdapter = new SuggestionAdapter(getActivity(),
                 suggestions, mode);
         listView.setAdapter(suggestionAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                new NotificationMaster(getContext(), suggestionAdapter.getItem(position))
+                new NotificationMaster(getActivity(), suggestionAdapter.getItem(position))
                         .scheduleNotifications();
                 getActivity().onBackPressed();
                 //getActivity().finish(); // We're done with the app
