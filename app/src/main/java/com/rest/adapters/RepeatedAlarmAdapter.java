@@ -56,7 +56,7 @@ public class RepeatedAlarmAdapter extends BaseAdapter {
         ((TextView) root.findViewById(R.id.alarmTime))
                 .setText(TimeUtils.format(TimeUtils.HH_MM_FORMAT, alarm.getTime()));
         ((TextView) root.findViewById(R.id.days))
-                .setText(alarm.getDays(context));
+                .setText(alarm.getDaysFormatted(context));
 
         return root;
     }

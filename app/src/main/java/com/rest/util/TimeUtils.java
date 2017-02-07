@@ -35,6 +35,14 @@ public class TimeUtils {
                 c.get(Calendar.MINUTE));
     }
 
+    public static HourMinute fromDate(long date) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(date);
+
+        return new HourMinute(c.get(Calendar.HOUR_OF_DAY),
+                c.get(Calendar.MINUTE));
+    }
+
     public static Date now() {
         return new Date();
     }

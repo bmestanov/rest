@@ -16,8 +16,8 @@ import android.util.Log;
 import com.rest.R;
 import com.rest.activity.RateActivity;
 
-public class AlarmService extends IntentService {
-    public AlarmService() {
+public class NotificationService extends IntentService {
+    public NotificationService() {
         super("AlarmService");
     }
 
@@ -26,12 +26,12 @@ public class AlarmService extends IntentService {
         Log.d(getClass().getSimpleName(), "In the intent service!");
 
         int type = intent.getIntExtra(NotificationMaster.NOTIFICATION_TYPE,
-                NotificationMaster.EVENT_ALARM);
+                NotificationMaster.EVENT_FEEDBACK);
 
         PendingIntent contentIntent = null;
         String msg;
 
-        if (type == NotificationMaster.EVENT_ALARM) {
+        if (type == NotificationMaster.EVENT_FEEDBACK) {
             contentIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, RateActivity.class), 0);
             msg = "How do you feel?";

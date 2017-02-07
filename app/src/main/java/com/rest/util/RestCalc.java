@@ -3,8 +3,11 @@ package com.rest.util;
 import android.util.Log;
 
 import com.rest.models.Suggestion;
+import com.rest.state.CycleController;
+import com.rest.state.Preferences;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -86,5 +89,17 @@ public class RestCalc {
         }
 
         return suggestions;
+    }
+
+    // For a given alarm time calculates the best time to show a rest notification
+    // That name though...
+    public static long calculateOptimalRestNotificationTime(long time) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(time);
+
+        c.add(Calendar.MINUTE, -Preferences.OPTIMAL_CYCLES *
+                CycleController.CYCLE_LENGTH - Preferences.REST_DELAY - Preferences.SLEEP_DELAY);
+
+        return time - c.getTimeInMillis();
     }
 }

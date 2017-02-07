@@ -61,9 +61,10 @@ public class SuggestionAdapter extends BaseAdapter {
         ((TextView) root.findViewById(R.id.suggestedAlarmTime))
                 .setText(suggestion.getFormattedTime(mode));
         ((TextView) root.findViewById(R.id.amountSleep))
-                .setText(String.format("%dh %dm of sleep",
+                .setText(String.format("%dh %dm of %s",
                         suggestion.getSleepHours(),
-                        suggestion.getSleepMins()));
+                        suggestion.getSleepMins(),
+                        suggestion.isNap() ? "nap" : "sleep"));
 
         int cycles = suggestion.getCycles();
         ((TextView) root.findViewById(R.id.cycleCount))

@@ -28,10 +28,10 @@
             android:theme="@style/RateDialog" />
 
         <service
-            android:name=".notification.AlarmService"
+            android:name=".notification.NotificationService"
             android:enabled="true" />
         <receiver
-            android:name=".notification.AlarmReceiver"
+            android:name=".notification.NotificationReceiver"
             android:enabled="true" />
     </application>
 

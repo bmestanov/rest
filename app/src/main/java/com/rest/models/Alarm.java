@@ -8,42 +8,45 @@ import com.rest.state.App;
 import com.rest.util.TimeUtils;
 
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by Bilal on 08/I/2017
  */
 
-public class Alarm {
-    private static final String ALARM_EXTRA = "ALARM_EXTRA";
+public final class Alarm {
+    public static final String ALARM_EXTRA = "ALARM_EXTRA";
+    private static transient int EVERY_DAY = 7;
 
+    public static int[] DAY_MAP = new int[]{
+            Calendar.MONDAY,
+            Calendar.TUESDAY,
+            Calendar.WEDNESDAY,
+            Calendar.THURSDAY,
+            Calendar.FRIDAY,
+            Calendar.SATURDAY,
+            Calendar.SUNDAY,
+    };
+    int id;
+    private boolean notify;
     private long dateTime;
-    private DaysOfWeek days;
-    private String label;
-
+    private ArrayList<Integer> days;
 
     public Alarm() {
     }
 
-    public static Alarm fromPickerResult(int hour, int minute, DaysOfWeek days) {
+    public static Alarm fromPickerResult(int hour, int minute, ArrayList<Integer> days) {
         Alarm alarm = new Alarm();
 
+        alarm.id = App.getState().getAlarmID();
+        alarm.notify = true;
         alarm.days = days;
         alarm.dateTime = TimeUtils.fromHourMinute(hour, minute).getTime();
         return alarm;
     }
 
-    public void set(Context context) {
-        App.getState().addAlarm(this);
-        App.getpController().saveState();
-
-        //Go call the notification master here
-    }
-
-    public void cancel(Context context) {
-        App.getState().cancelAlarm(this);
-        App.getpController().saveState();
-    }
 
     public long getTime() {
         return dateTime;
@@ -55,127 +58,47 @@ public class Alarm {
         return TimeUtils.format(TimeUtils.HH_MM_FORMAT, dateTime);
     }
 
-    public String getDays(Context context) {
-        return days.toString(context, false);
+    public int getId() {
+        return id;
     }
 
-    /*
-            Bitmask representation of active days
-            as inspired by Google's Alarm Clock implementation
+    public List<Long> listTimestamps() {
+        List<Long> times = new ArrayList<>(7);
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(dateTime);
 
-    */
-    public static class DaysOfWeek {
-        private static int[] DAY_MAP = new int[]{
-                Calendar.MONDAY,
-                Calendar.TUESDAY,
-                Calendar.WEDNESDAY,
-                Calendar.THURSDAY,
-                Calendar.FRIDAY,
-                Calendar.SATURDAY,
-                Calendar.SUNDAY,
-        };
-
-
-        private int mDays;
-
-        public DaysOfWeek() {
+        for (Integer day : days) {
+            c.set(Calendar.DAY_OF_WEEK, day);
+            times.add(c.getTimeInMillis());
         }
 
-        public String toString(Context context, boolean showNever) {
-            StringBuilder stringBuilder = new StringBuilder();
+        return times;
+    }
 
-            // no days (0000000)
-            if (mDays == 0) {
-                return showNever ?
-                        context.getText(R.string.never).toString() : "";
-            }
+    public ArrayList<Integer> getDays() {
+        return days;
+    }
 
-            // every day (1111111)
-            if (mDays == 0x7f) {
-                return context.getText(R.string.every_day).toString();
-            }
+    public String getDaysFormatted(Context context) {
+        StringBuilder sBuilder = new StringBuilder();
 
-            // count selected days
-            int dayCount = 0, days = mDays;
-            while (days > 0) {
-                if ((days & 1) == 1) dayCount++;
-                days = days >> 1;
-            }
-
-            // short or long form?
+        if (days.isEmpty()) {
+            sBuilder.append(context.getString(R.string.never));
+        } else if (days.size() == EVERY_DAY) {
+            sBuilder.append(context.getString(R.string.every_day));
+        } else {
             DateFormatSymbols dfs = new DateFormatSymbols();
-            String[] dayList = (dayCount > 1) ?
+            String[] dayList = (days.size() > 1) ?
                     dfs.getShortWeekdays() :
                     dfs.getWeekdays();
 
-            // selected days
-            for (int i = 0; i < 7; i++) {
-                if ((mDays & (1 << i)) != 0) {
-                    stringBuilder.append(dayList[DAY_MAP[i]]);
-                    dayCount -= 1;
-                    if (dayCount > 0) stringBuilder.append(" ");
-                }
-            }
-            return stringBuilder.toString();
-        }
-
-        private boolean isSet(int day) {
-            return ((mDays & (1 << day)) > 0);
-        }
-
-        public void set(int day, boolean set) {
-            if (set) {
-                mDays |= (1 << day);
-            } else {
-                mDays &= ~(1 << day);
+            for (Integer day : days) {
+                sBuilder.append(dayList[day]);
+                sBuilder.append(" ");
             }
         }
 
-        public void set(DaysOfWeek dow) {
-            mDays = dow.mDays;
-        }
-
-        public int getCoded() {
-            return mDays;
-        }
-
-        // Returns days of week encoded in an array of booleans.
-        public boolean[] getBooleanArray() {
-            boolean[] ret = new boolean[7];
-            for (int i = 0; i < 7; i++) {
-                ret[i] = isSet(i);
-            }
-            return ret;
-        }
-
-        public boolean isRepeatSet() {
-            return mDays != 0;
-        }
-
-        /**
-         * returns number of days from today until next alarm
-         *
-         * @param c must be set to today
-         */
-        public int getNextAlarm(Calendar c) {
-            if (mDays == 0) {
-                return -1;
-            }
-
-            int today = (c.get(Calendar.DAY_OF_WEEK) + 5) % 7;
-
-            int day = 0;
-            int dayCount = 0;
-            for (; dayCount < 7; dayCount++) {
-                day = (today + dayCount) % 7;
-                if (isSet(day)) {
-                    break;
-                }
-            }
-            return dayCount;
-        }
+        return sBuilder.toString();
     }
-
-
 }
 

@@ -62,8 +62,8 @@ public class SuggestionPickFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                new NotificationMaster(getActivity(), suggestionAdapter.getItem(position))
-                        .scheduleNotifications();
+                new NotificationMaster(getActivity())
+                        .scheduleForSingleEvent(suggestionAdapter.getItem(position));
                 getActivity().onBackPressed();
                 //getActivity().finish(); // We're done with the app
             }

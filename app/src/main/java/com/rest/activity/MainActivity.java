@@ -17,7 +17,7 @@ import static com.rest.fragments.ActionsFragment.OnActionSelectedListener;
 
 public class MainActivity extends AppCompatActivity {
     public static final String MAIN = MainActivity.class.getSimpleName();
-    private OnActionSelectedListener listener;
+    private static OnActionSelectedListener listener;
 
     @Override
     protected void onStart() {

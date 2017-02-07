@@ -79,7 +79,12 @@ public class PersistenceController {
     public void loadState() {
         String savedState = mPreferences.getString(State.STATE, null);
 
-        App.state = new Gson().fromJson(savedState, State.class);
+        try {
+            App.state = new Gson().fromJson(savedState, State.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            App.state = new State();
+        }
 
         if (App.state == null) {
             App.state = new State();

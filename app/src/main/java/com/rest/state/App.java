@@ -11,14 +11,6 @@ public class App extends Application {
     static State state;
     static PersistenceController pController;
 
-    public static PersistenceController getpController() {
-        return pController;
-    }
-
-    public static State getState() {
-        return state;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -27,5 +19,13 @@ public class App extends Application {
         pController = new PersistenceController(this);
         pController.loadPreferences();
         pController.loadState();
+    }
+
+    public static PersistenceController getpController() {
+        return pController;
+    }
+
+    public static State getState() {
+        return state;
     }
 }

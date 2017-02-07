@@ -19,6 +19,7 @@ public class Suggestion implements Comparable<Suggestion> {
     public static final String HOUR = "hour";
     public static final String MODE = "mode";
     public static final int MAX_CYCLES = 10;
+    private static final int NAP_DURATION = 180;
 
     private final Date restAt;
     private final Date alarmAt;
@@ -53,7 +54,7 @@ public class Suggestion implements Comparable<Suggestion> {
         return cycles;
     }
 
-    private int totalMins() {
+    public int totalMins() {
         return sleepHours * 60 + sleepMins;
     }
 
@@ -67,22 +68,21 @@ public class Suggestion implements Comparable<Suggestion> {
 
     @Override
     public int compareTo(@NonNull Suggestion other) {
-        int opt1 = optimality();
-        int opt2 = other.optimality();
-        if (opt1 == opt2) {
-            return cycles - other.cycles;
-        } else {
-            return optimality() - other.optimality();
-        }
+        return optimality() - other.optimality();
     }
 
     private int optimality() {
-        return Math.abs(totalMins() - Preferences.OPTIMAL_SLEEP);
+        return Math.abs(cycles - Preferences.OPTIMAL_CYCLES);
     }
 
+    // Notifies unless the scheduled rest time is less than 5 minutes away
     public boolean notifyToRest() {
         int interval = TimeUtils.intervalInMinutes(getRestAt(), TimeUtils.now());
         return getRestAt().after(TimeUtils.now()) &&
                 interval > Preferences.MIN_REST_DELAY;
+    }
+
+    public boolean isNap() {
+        return totalMins() < NAP_DURATION;
     }
 }

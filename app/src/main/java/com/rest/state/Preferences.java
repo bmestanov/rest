@@ -6,9 +6,10 @@ package com.rest.state;
 public class Preferences {
     public static int REST_DELAY;
     public static int SLEEP_DELAY;
-    /////////////////////////////////////
-
     public static int MIN_REST_DELAY = 5;
+
+    /////////////////////////////////////
+    public static final int OPTIMAL_CYCLES = 6;
     public static int OPTIMAL_SLEEP = 480;
 
     public static class Default {

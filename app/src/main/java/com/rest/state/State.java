@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 public class State {
-    public static final String STATE = State.class.getSimpleName();
+    public static transient final String STATE = State.class.getSimpleName();
     private List<Alarm> activeAlarms;
 
     State() {
@@ -19,13 +19,26 @@ public class State {
 
     public void addAlarm(Alarm alarm) {
         activeAlarms.add(alarm);
+        App.pController.saveState();
     }
 
-    public void cancelAlarm(Alarm alarm) {
+    public void removeAlarm(Alarm alarm) {
         activeAlarms.remove(alarm);
+        App.pController.saveState();
     }
 
     public List<Alarm> getAlarms() {
         return activeAlarms;
+    }
+
+    public int getAlarmID() {
+        int id = (int) (Math.random() * 10_000);
+
+        for (Alarm alarm : activeAlarms) {
+            if (alarm.getId() == id)
+                return getAlarmID();
+        }
+
+        return id;
     }
 }

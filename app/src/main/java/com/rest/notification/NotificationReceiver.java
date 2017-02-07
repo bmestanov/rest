@@ -10,14 +10,14 @@ import android.util.Log;
 /**
  * Created by Bilal on 6.1.2017 г..
  */
-public class AlarmReceiver extends WakefulBroadcastReceiver {
+public class NotificationReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(getClass().getSimpleName(), "In the receiver!");
+        Log.d(getClass().getSimpleName(), "In the alarm receiver!");
 
         //this will send a notification message
         ComponentName comp = new ComponentName(context.getPackageName(),
-                AlarmService.class.getName());
+                NotificationService.class.getName());
         startWakefulService(context, (intent.setComponent(comp)));
         setResultCode(Activity.RESULT_OK);
     }
