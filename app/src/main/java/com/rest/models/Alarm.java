@@ -100,5 +100,13 @@ public final class Alarm {
 
         return sBuilder.toString();
     }
+
+    public boolean isActive() {
+        return notify;
+    }
+
+    public void setActive(boolean active) {
+        this.notify = active;
+    }
 }
 

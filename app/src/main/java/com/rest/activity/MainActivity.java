@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private void setFragment(Fragment fragment, boolean pushToStack) {
         android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
 
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         ft.replace(R.id.actions_fragment, fragment);
         if (pushToStack)
             ft.addToBackStack(null);
@@ -86,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
         Log.d(MAIN, "Shutting down");
         //Saving the state.. just in case
         App.getpController().savePreferences();

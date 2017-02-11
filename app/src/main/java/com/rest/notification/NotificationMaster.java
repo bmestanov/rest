@@ -13,6 +13,7 @@ import com.rest.state.Preferences;
 import com.rest.util.RestCalc;
 import com.rest.util.TimeUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -49,7 +50,7 @@ public class NotificationMaster {
         scheduleSingleFeedbackNotification();
 
         //Intent to set the alarm itself
-        setAlarm();
+        setAlarm(suggestion.getAlarmAt().getTime(), null);
     }
 
     public void scheduleForRepeating(Alarm alarm) {
@@ -83,14 +84,7 @@ public class NotificationMaster {
 
         }
 
-        Intent alarmIntent = new Intent(AlarmClock.ACTION_SET_ALARM);
-
-        TimeUtils.HourMinute hm = TimeUtils.fromDate(alarm.getTime());
-        alarmIntent.putExtra(AlarmClock.EXTRA_HOUR, hm.hour);
-        alarmIntent.putExtra(AlarmClock.EXTRA_MINUTES, hm.minute);
-        alarmIntent.putExtra(AlarmClock.EXTRA_DAYS, alarm.getDays());
-        alarmIntent.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
-        context.startActivity(alarmIntent);
+        setAlarm(alarm.getTime(), alarm.getDays());
     }
 
     public void cancelRepeating(Alarm alarm) {
@@ -101,6 +95,8 @@ public class NotificationMaster {
 
         //Cancels all alarms with the same ID
         alarmManager.cancel(sender);
+
+        Log.d(NOTIFICATION_MASTER, "Cancelled alarm " + alarm);
     }
 
     private void scheduleSingleRestNotification() {
@@ -133,15 +129,18 @@ public class NotificationMaster {
         Log.d(NOTIFICATION_MASTER, "Alarm notification set to " + suggestion.getAlarmAt());
     }
 
-    private void setAlarm() {
+    private void setAlarm(long alarmTime, ArrayList<Integer> days) {
         Intent alarmIntent = new Intent(AlarmClock.ACTION_SET_ALARM);
 
-        TimeUtils.HourMinute hm = TimeUtils.fromDate(suggestion.getAlarmAt());
+        TimeUtils.HourMinute hm = TimeUtils.fromDate(alarmTime);
         alarmIntent.putExtra(AlarmClock.EXTRA_HOUR, hm.hour);
         alarmIntent.putExtra(AlarmClock.EXTRA_MINUTES, hm.minute);
         alarmIntent.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
+        if (days != null) {
+            alarmIntent.putExtra(AlarmClock.EXTRA_DAYS, days);
+        }
         context.startActivity(alarmIntent);
 
-        Log.d(NOTIFICATION_MASTER, "Alarm set to " + suggestion.getAlarmAt());
+        Log.d(NOTIFICATION_MASTER, "Alarm set to " + new Date(alarmTime));
     }
 }

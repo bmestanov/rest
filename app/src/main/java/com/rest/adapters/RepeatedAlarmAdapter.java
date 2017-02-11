@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.rest.R;
 import com.rest.models.Alarm;
+import com.rest.notification.NotificationMaster;
 import com.rest.util.TimeUtils;
 
 import java.util.List;
@@ -51,12 +54,27 @@ public class RepeatedAlarmAdapter extends BaseAdapter {
             root = LayoutInflater.from(context).inflate(RES_ID, null);
         }
 
-        Alarm alarm = getItem(position);
+        final Alarm alarm = getItem(position);
 
         ((TextView) root.findViewById(R.id.alarmTime))
                 .setText(TimeUtils.format(TimeUtils.HH_MM_FORMAT, alarm.getTime()));
         ((TextView) root.findViewById(R.id.days))
                 .setText(alarm.getDaysFormatted(context));
+
+        Switch notifyActive = (Switch) root.findViewById(R.id.activeSwitch);
+        notifyActive.setChecked(alarm.isActive());
+        notifyActive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                NotificationMaster master = new NotificationMaster(context);
+                if (alarm.isActive() && !isChecked) {
+                    master.cancelRepeating(alarm);
+                } else if (!alarm.isActive() && isChecked) {
+                    master.scheduleForRepeating(alarm);
+                }
+                alarm.setActive(isChecked);
+            }
+        });
 
         return root;
     }
