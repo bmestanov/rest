@@ -22,4 +22,8 @@
     <string name="warn_reset">This will reset your cycle length back to 90 minutes. Proceed?</string>
     <string name="no_suggestions">No suggestions available</string>
     <string name="no_repeating_alarms">No repeating alarms set</string>
+    <string name="fixed_wakeup">Fixed wakeup</string>
+    <string name="fixed_bedtime">Fixed bedtime</string>
+    <string name="repeating_alarms">Repeating alarms</string>
+    <string name="rest_now">rest now</string>
 </resources>

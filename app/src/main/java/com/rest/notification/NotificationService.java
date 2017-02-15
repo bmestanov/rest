@@ -15,6 +15,8 @@ import android.util.Log;
 
 import com.rest.R;
 import com.rest.activity.RateActivity;
+import com.rest.models.Alarm;
+import com.rest.state.App;
 
 public class NotificationService extends IntentService {
     public NotificationService() {
@@ -25,13 +27,22 @@ public class NotificationService extends IntentService {
     public void onHandleIntent(Intent intent) {
         Log.d(getClass().getSimpleName(), "In the intent service!");
 
-        int type = intent.getIntExtra(NotificationMaster.NOTIFICATION_TYPE,
-                NotificationMaster.EVENT_FEEDBACK);
+        String action = intent.getAction();
+
 
         PendingIntent contentIntent = null;
-        String msg;
 
-        if (type == NotificationMaster.EVENT_FEEDBACK) {
+        //Boot is completed - so reschedule all repeating alarms
+        if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
+            NotificationMaster nMaster = new NotificationMaster(getBaseContext());
+            for (Alarm alarm : App.getState().getAlarms()) {
+                nMaster.scheduleForRepeating(alarm);
+            }
+            return;
+        }
+
+        String msg;
+        if (action.equals(NotificationMaster.EVENT_FEEDBACK)) {
             contentIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, RateActivity.class), 0);
             msg = "How do you feel?";
@@ -40,6 +51,7 @@ public class NotificationService extends IntentService {
         }
 
         sendNotification(contentIntent, msg);
+
         Log.d("AlarmService", "Notification sent.");
     }
 
@@ -51,7 +63,6 @@ public class NotificationService extends IntentService {
         NotificationCompat.Builder alarmNotificationBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle("Hey there!")
                 .setSmallIcon(R.drawable.ic_notification)
-                .setVibrate(new long[]{500, 500})
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
                 .setAutoCancel(true)

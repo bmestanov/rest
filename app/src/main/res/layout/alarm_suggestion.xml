@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,34 +10,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
-        android:visibility="visible"
-        android:weightSum="1">
+        android:padding="8dp"
+        android:visibility="visible">
 
-        <TextView
-            android:id="@+id/suggestedAlarmTime"
-            style="@style/Base.TextAppearance.AppCompat.Large"
-            android:layout_width="wrap_content"
+        <me.grantland.widget.AutofitTextView
+            android:layout_width="@dimen/clock_width"
             android:layout_height="match_parent"
-            android:layout_weight=".5"
-            android:textSize="34sp"
+            android:lines="1"
+            android:layout_weight="0.7"
+            tools:text="16:02"
+            android:id="@+id/suggestedAlarmTime"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:maxLines="1"
+            android:textSize="36sp"
             android:textStyle="bold"
-            tools:text="16:02" />
+            android:textColor="#fff"
+            autofit:minTextSize="16sp" />
 
-        <TextView
+        <me.grantland.widget.AutofitTextView
             android:id="@+id/amountSleep"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight=".3"
+            android:layout_weight=".15"
             android:gravity="center"
+            android:padding="8dp"
             tools:text="12h 14m of sleep" />
 
-        <TextView
+        <me.grantland.widget.AutofitTextView
             android:id="@+id/cycleCount"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight=".2"
+            android:layout_weight=".15"
             android:gravity="center"
+            android:padding="8dp"
             android:textStyle="normal|bold"
             tools:text="7 cycles" />
     </LinearLayout>

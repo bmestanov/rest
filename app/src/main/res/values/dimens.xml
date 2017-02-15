@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="day_select_width">64dp</dimen>
     <dimen name="day_select_height">32dp</dimen>
+    <dimen name="clock_width">96dp</dimen>
 </resources>

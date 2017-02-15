@@ -23,8 +23,8 @@ import java.util.Date;
 public class NotificationMaster {
     public static final String NOTIFICATION_MASTER = NotificationMaster.class.getSimpleName();
     public static final String NOTIFICATION_TYPE = "notification_type";
-    public static final int EVENT_REST = 1;
-    public static final int EVENT_FEEDBACK = 2;
+    public static final String EVENT_REST = "rest_notification";
+    public static final String EVENT_FEEDBACK = "feedback_notification";
     private Context context;
     private AlarmManager alarmManager;
     private Suggestion suggestion;
@@ -58,10 +58,10 @@ public class NotificationMaster {
                 .calculateOptimalRestNotificationTime(alarm.getTime());
 
         Intent restIntent = new Intent(context, NotificationReceiver.class);
-        restIntent.putExtra(NOTIFICATION_TYPE, EVENT_REST);
+        restIntent.setAction(EVENT_REST);
 
         Intent feedbackIntent = new Intent(context, NotificationReceiver.class);
-        feedbackIntent.putExtra(NOTIFICATION_TYPE, EVENT_FEEDBACK);
+        feedbackIntent.setAction(EVENT_FEEDBACK);
 
         PendingIntent restSender = PendingIntent.getBroadcast(context,
                 alarm.getId(), restIntent, 0);
@@ -101,12 +101,12 @@ public class NotificationMaster {
 
     private void scheduleSingleRestNotification() {
         Intent restNotificationIntent = new Intent(context, NotificationReceiver.class);
-        restNotificationIntent.putExtra(NOTIFICATION_TYPE, EVENT_REST);
+        restNotificationIntent.setAction(EVENT_REST);
 
         long notificationTime = TimeUtils.subtractMinutes(suggestion.getRestAt().getTime(),
                 Preferences.REST_DELAY);
         PendingIntent sender = PendingIntent
-                .getBroadcast(context, EVENT_REST, restNotificationIntent, 0);
+                .getBroadcast(context, 0, restNotificationIntent, 0);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,
                 notificationTime,
                 sender);
@@ -117,10 +117,10 @@ public class NotificationMaster {
 
     private void scheduleSingleFeedbackNotification() {
         Intent feedbackIntent = new Intent(context, NotificationReceiver.class);
-        feedbackIntent.putExtra(NOTIFICATION_TYPE, EVENT_FEEDBACK);
+        feedbackIntent.setAction(EVENT_FEEDBACK);
 
         PendingIntent feedbackSender = PendingIntent
-                .getBroadcast(context, EVENT_FEEDBACK, feedbackIntent, 0);
+                .getBroadcast(context, 0, feedbackIntent, 0);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,
                 suggestion.getAlarmAt().getTime(),

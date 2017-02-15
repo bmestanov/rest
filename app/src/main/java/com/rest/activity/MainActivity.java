@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
-    private Bundle makeBundle(int hours, int mins, int mode) {
+    public static Bundle makeBundle(int hours, int mins, int mode) {
         Bundle bundle = new Bundle(3);
         bundle.putInt(Suggestion.HOUR, hours);
         bundle.putInt(Suggestion.MINUTE, mins);

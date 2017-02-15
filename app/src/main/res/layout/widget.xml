@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="144dp"
+    android:minWidth="56dp"
+    android:layout_height="56dp"
+    android:id="@+id/widget_layout"
+    android:minHeight="144dp"
+    android:background="@drawable/widget_background"
+    android:descendantFocusability="beforeDescendants"
+    android:gravity="center_vertical"
+    android:padding="4dp">
+
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/widget_btn"
+        android:minHeight="48dp"
+        android:clickable="false"
+        android:layout_marginRight="4dp"
+        android:minWidth="48dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/rest_now"
+        android:textColor="#fff" />
+</LinearLayout>

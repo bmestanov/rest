@@ -10,10 +10,10 @@ import com.rest.R;
 import com.rest.state.CycleController;
 
 /**
- * Created on 01/02/2017
+ * Created on 15/02/2017
  */
-public class RateActivity extends Activity {
 
+public class RateActivity extends Activity {
     RatingBar ratingBar;
 
     @Override

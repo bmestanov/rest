@@ -12,7 +12,7 @@
         android:background="@color/backgroundDark"
         android:elegantTextHeight="true"
         android:elevation="0dp"
-        android:text="Fixed wakeup"
+        android:text="@string/fixed_wakeup"
         android:textSize="24sp" />
 
     <Button
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
         android:background="@color/backgroundDark"
-        android:text="Fixed bedtime"
+        android:text="@string/fixed_bedtime"
         android:textSize="24sp" />
 
     <Button
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
         android:background="@color/backgroundDark"
-        android:text="Repeating alarms"
+        android:text="@string/repeating_alarms"
         android:textSize="24sp" />
 
     <Button
@@ -39,6 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
         android:background="@color/backgroundDark"
-        android:text="Settings"
+        android:text="@string/settings"
         android:textSize="24sp" />
 </LinearLayout>
