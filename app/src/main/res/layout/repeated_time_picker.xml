@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <TimePicker
@@ -9,68 +10,92 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/days_selector"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:gravity="center"
             android:padding="16dp">
 
-            <CheckBox
+            <ToggleButton
                 android:id="@+id/day_select_monday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="M" />
+                android:layout_width="@dimen/day_picker_size"
+                android:layout_height="@dimen/day_picker_size"
+                android:background="@drawable/day_selector"
+                android:textColor="@xml/day_selector_color"
+                tools:checked="true"
+                android:layout_marginLeft="@dimen/day_picker_margin"
+                android:layout_marginRight="@dimen/day_picker_margin"
+                android:textOn="M"
+                android:textOff="M" />
 
-            <CheckBox
+            <ToggleButton
                 android:id="@+id/day_select_tuesday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="T" />
+                android:layout_width="@dimen/day_picker_size"
+                android:layout_height="@dimen/day_picker_size"
+                android:background="@drawable/day_selector"
+                android:textColor="@xml/day_selector_color"
+                android:layout_marginRight="@dimen/day_picker_margin"
+                android:textOn="T"
+                android:textOff="T" />
 
-            <CheckBox
+            <ToggleButton
                 android:id="@+id/day_select_wednesday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="W" />
+                android:layout_width="@dimen/day_picker_size"
+                android:layout_height="@dimen/day_picker_size"
+                android:background="@drawable/day_selector"
+                android:textColor="@xml/day_selector_color"
+                android:layout_marginRight="@dimen/day_picker_margin"
+                android:textOn="W"
+                android:textOff="W" />
 
-            <CheckBox
+            <ToggleButton
                 android:id="@+id/day_select_thursday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="T" />
+                android:layout_width="@dimen/day_picker_size"
+                android:layout_height="@dimen/day_picker_size"
+                android:background="@drawable/day_selector"
+                android:textColor="@xml/day_selector_color"
+                android:layout_marginRight="@dimen/day_picker_margin"
+                android:textOn="T"
+                android:textOff="T" />
 
-            <CheckBox
+            <ToggleButton
                 android:id="@+id/day_select_friday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="F" />
+                android:layout_width="@dimen/day_picker_size"
+                android:layout_height="@dimen/day_picker_size"
+                android:background="@drawable/day_selector"
+                android:textColor="@xml/day_selector_color"
+                android:layout_marginRight="@dimen/day_picker_margin"
+                android:textOn="F"
+                android:textOff="F" />
 
-            <CheckBox
+            <ToggleButton
                 android:id="@+id/day_select_saturday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="S" />
+                android:layout_width="@dimen/day_picker_size"
+                android:layout_height="@dimen/day_picker_size"
+                android:background="@drawable/day_selector"
+                android:textColor="@xml/day_selector_color"
+                android:layout_marginRight="@dimen/day_picker_margin"
+                android:textOn="S"
+                android:textOff="S" />
 
-            <CheckBox
+            <ToggleButton
                 android:id="@+id/day_select_sunday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="S" />
-
+                android:layout_width="@dimen/day_picker_size"
+                android:layout_height="@dimen/day_picker_size"
+                android:background="@drawable/day_selector"
+                android:textColor="@xml/day_selector_color"
+                android:layout_marginRight="@dimen/day_picker_margin"
+                android:textOn="S"
+                android:textOff="S" />
         </LinearLayout>
     </HorizontalScrollView>
+
 </LinearLayout>

@@ -22,16 +22,17 @@
         android:layout_height="0dp"
         android:layout_weight="0.4"
         android:scrollbars="vertical"
+        android:animateLayoutChanges="true"
         android:visibility="visible" />
 
-    <Button xmlns:android="http://schemas.android.com/apk/res/android"
+    <Button
         android:id="@+id/add_repeating_alarm_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
         android:background="@color/colorPrimaryDark"
         android:elegantTextHeight="true"
-        android:text="Add"
+        android:text="@string/add"
         android:textSize="24sp" />
 
 

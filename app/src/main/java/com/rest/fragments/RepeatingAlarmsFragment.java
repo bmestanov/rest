@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.rest.R;
 import com.rest.adapters.RepeatedAlarmAdapter;
@@ -24,7 +26,6 @@ import com.rest.notification.NotificationMaster;
 import com.rest.state.App;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created on 06/02/2017
@@ -36,6 +37,8 @@ public class RepeatingAlarmsFragment extends Fragment {
 
     private RepeatedAlarmAdapter adapter;
     private NotificationMaster notificationMaster;
+    private TextView noAlarmsTextView;
+    private ListView alarmsListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,8 +52,7 @@ public class RepeatingAlarmsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_repeated_alarms, container, false);
 
-        List<Alarm> currentAlarms = App.getState().getAlarms();
-        adapter = new RepeatedAlarmAdapter(getActivity(), currentAlarms);
+        adapter = new RepeatedAlarmAdapter(getActivity(), App.getState().getAlarms());
 
         Button addButton = (Button) root.findViewById(R.id.add_repeating_alarm_btn);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -61,15 +63,16 @@ public class RepeatingAlarmsFragment extends Fragment {
         });
 
 
-        if (currentAlarms.isEmpty()) {
-            root.findViewById(R.id.no_repeating_alarms).setVisibility(View.VISIBLE);
-            root.findViewById(R.id.alarmsList).setVisibility(View.GONE);
+        noAlarmsTextView = (TextView) root.findViewById(R.id.no_repeating_alarms);
+        alarmsListView = (ListView) root.findViewById(R.id.alarmsList);
+
+        if (adapter.getCount() == 0) {
+            hideList();
             return root;
         }
 
 
-        ListView alarmsList = (ListView) root.findViewById(R.id.alarmsList);
-        alarmsList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        alarmsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 showDialogToRemove(position);
@@ -77,14 +80,14 @@ public class RepeatingAlarmsFragment extends Fragment {
             }
         });
 
-        alarmsList.setAdapter(adapter);
+        alarmsListView.setAdapter(adapter);
         return root;
     }
 
     private void showDialogToRemove(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Remove repeating alarm");
-        builder.setMessage("Proceed?");
+        builder.setTitle(getActivity().getString(R.string.remove_alarm));
+        builder.setMessage(getActivity().getString(R.string.proceed));
         builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -102,7 +105,26 @@ public class RepeatingAlarmsFragment extends Fragment {
         App.getState().removeAlarm(alarm);
         notificationMaster.cancelRepeating(alarm);
 
+        updateList();
+    }
+
+    private void hideList() {
+        noAlarmsTextView.setVisibility(View.VISIBLE);
+        alarmsListView.setVisibility(View.GONE);
+    }
+
+    private void showList() {
+        noAlarmsTextView.setVisibility(View.GONE);
+        alarmsListView.setVisibility(View.VISIBLE);
+    }
+
+    private void updateList() {
         adapter.notifyDataSetChanged();
+        if (adapter.getCount() == 0) {
+            hideList();
+        } else {
+            showList();
+        }
     }
 
     private void addAlarm() {
@@ -136,15 +158,17 @@ public class RepeatingAlarmsFragment extends Fragment {
                         days));
 
                 if (days.isEmpty()) {
-                    // No days were selected. Not okay!
-                    return; // Show a message
+                    Toast.makeText(getActivity(),
+                            getActivity().getString(R.string.no_days_selected),
+                            Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 Alarm alarm = Alarm.fromPickerResult(hours, mins, days);
                 App.getState().addAlarm(alarm);
-                notificationMaster.scheduleForRepeating(alarm);
+                updateList();
 
-                adapter.notifyDataSetChanged();
+                notificationMaster.scheduleForRepeating(alarm);
             }
         });
 
@@ -156,7 +180,7 @@ public class RepeatingAlarmsFragment extends Fragment {
         int children = daysLayout.getChildCount(); // == 7, 0 is for Monday, 6 is for Sunday
 
         for (int i = 0; i < children; i++) {
-            if (((CheckBox) daysLayout.getChildAt(i)).isChecked())
+            if (((ToggleButton) daysLayout.getChildAt(i)).isChecked())
                 days.add(Alarm.DAY_MAP[i]);
         }
 

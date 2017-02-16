@@ -26,4 +26,8 @@
     <string name="fixed_bedtime">Fixed bedtime</string>
     <string name="repeating_alarms">Repeating alarms</string>
     <string name="rest_now">rest now</string>
+    <string name="no_days_selected">No days were selected</string>
+    <string name="remove_alarm">Remove repeating alarm</string>
+    <string name="proceed">Proceed?</string>
+    <string name="add">Add</string>
 </resources>
