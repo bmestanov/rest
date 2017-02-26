@@ -5,7 +5,10 @@ import android.support.annotation.NonNull;
 import com.rest.state.Preferences;
 import com.rest.util.TimeUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created on 24/01/2017
@@ -20,6 +23,7 @@ public class Suggestion implements Comparable<Suggestion> {
     public static final String MODE = "mode";
     public static final int MAX_CYCLES = 10;
     private static final int NAP_DURATION = 180;
+    private static final int OPTIMAL_DIFF = 1;
 
     private final Date restAt;
     private final Date alarmAt;
@@ -66,9 +70,28 @@ public class Suggestion implements Comparable<Suggestion> {
         return alarmAt;
     }
 
-    @Override
-    public int compareTo(@NonNull Suggestion other) {
-        return optimality() - other.optimality();
+    public static List<Suggestion> reorder(List<Suggestion> suggestions) {
+        // Reorders the list so the first suggestions are the best
+        // And the following are sorted by cycles
+
+        // optimals contains the optimal suggestions first
+        List<Suggestion> optimals = new ArrayList<>(suggestions.size());
+        List<Suggestion> nonOptimals = new ArrayList<>();
+
+        for (Suggestion suggestion : suggestions) {
+            if (suggestion.isOptimal()) {
+                optimals.add(suggestion);
+            } else {
+                nonOptimals.add(suggestion);
+            }
+        }
+
+        //Reverse the optimals so the longer times are first
+        Collections.reverse(optimals);
+
+        //Collecting all into one sorted list
+        optimals.addAll(nonOptimals);
+        return optimals;
     }
 
     private int optimality() {
@@ -84,5 +107,23 @@ public class Suggestion implements Comparable<Suggestion> {
 
     public boolean isNap() {
         return totalMins() < NAP_DURATION;
+    }
+
+    public boolean isOptimal() {
+        return optimality() <= Suggestion.OPTIMAL_DIFF;
+    }
+
+    @Override
+    public int compareTo(@NonNull Suggestion another) {
+        return cycles - another.cycles;
+    }
+
+    @Override
+    public String toString() {
+        return "Suggestion{" +
+                "cycles=" + cycles +
+                ", sleepHours=" + sleepHours +
+                ", sleepMins=" + sleepMins +
+                '}';
     }
 }

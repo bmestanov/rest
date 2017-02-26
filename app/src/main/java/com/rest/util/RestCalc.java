@@ -8,7 +8,6 @@ import com.rest.state.Preferences;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -31,8 +30,7 @@ public class RestCalc {
         suggestions = (mode == FIXED_ALARM) ?
                 forFixedAlarm(time) : forFixedRest(time);
 
-        Collections.sort(suggestions); //Optimal times first
-        return suggestions;
+        return Suggestion.reorder(suggestions); //Optimal times first
     }
 
     private static List<Suggestion> forFixedAlarm(Date alarmTime) {

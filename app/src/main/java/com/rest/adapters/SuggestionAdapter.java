@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,17 @@ public class SuggestionAdapter extends BaseAdapter {
         }
 
         Suggestion suggestion = getItem(position);
+
+        if (suggestion.isOptimal()) {
+            root.findViewById(R.id.suggestion_layout)
+                    .setBackgroundColor(ContextCompat.getColor(context,
+                            android.R.color.background_dark));
+        } else {
+            root.findViewById(R.id.suggestion_layout)
+                    .setBackgroundColor(ContextCompat.getColor(context,
+                            R.color.colorPrimaryDarker));
+        }
+
         ((TextView) root.findViewById(R.id.suggestedAlarmTime))
                 .setText(suggestion.getFormattedTime(mode));
         ((TextView) root.findViewById(R.id.amountSleep))
