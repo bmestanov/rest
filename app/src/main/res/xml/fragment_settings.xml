@@ -6,18 +6,27 @@
         android:key="@string/cycle_length_sharedpref_key"
         android:numeric="integer"
         android:title="@string/cycle_length" />
+    <Preference
+        android:title="@string/reset_cycle_length"
+        android:key="@string/reset_cycle_length_sharedpref_key"
+        android:summary="@string/warn_reset" />
     <EditTextPreference
         android:defaultValue="15"
         android:inputType="number"
         android:key="@string/rest_delay_sharedpref_key"
         android:numeric="integer"
-        android:summary="The typical time it takes you to get ready to sleep."
+        android:summary="@string/rest_delay_summary"
         android:title="@string/rest_delay" />
     <EditTextPreference
         android:defaultValue="20"
         android:inputType="number"
         android:key="@string/sleep_delay_sharedpref_key"
         android:numeric="integer"
-        android:summary="The typical time it takes you to fall asleep when resting (average is 20 minutes)."
+        android:summary="@string/sleep_delay_summary"
         android:title="@string/sleep_delay" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/feedback_on_sharedpref_key"
+        android:title="@string/feedback_on"
+        android:summary="@string/feedback_on_summary" />
 </PreferenceScreen>

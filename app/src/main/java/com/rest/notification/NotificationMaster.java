@@ -46,8 +46,10 @@ public class NotificationMaster {
                     + suggestion.getRestAt());
         }
 
-        //Intent to fire when the alarm occurs
-        scheduleSingleFeedbackNotification();
+        if (Preferences.FEEDBACK_ON) {
+            //Intent to fire when the alarm occurs
+            scheduleSingleFeedbackNotification();
+        }
 
         //Intent to set the alarm itself
         setAlarm(suggestion.getAlarmAt().getTime(), null);

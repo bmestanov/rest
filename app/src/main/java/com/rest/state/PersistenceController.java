@@ -31,21 +31,26 @@ public class PersistenceController {
                 Default.REST_DELAY);
         Preferences.SLEEP_DELAY = mPreferences.getInt(Key.SLEEP_DELAY_KEY,
                 Default.SLEEP_DELAY);
+        Preferences.FEEDBACK_ON = mPreferences.getBoolean(Key.FEEDBACK_ON_KEY,
+                Default.FEEDBACK_ON);
 
         Log.d(PERSISTENCE_CTRL, "Cycle length received: " + CycleController.CYCLE_LENGTH);
         Log.d(PERSISTENCE_CTRL, "Rest delay received: " + Preferences.REST_DELAY);
         Log.d(PERSISTENCE_CTRL, "Sleep delay received: " + Preferences.SLEEP_DELAY);
+        Log.d(PERSISTENCE_CTRL, "Feedback on received:" + Preferences.FEEDBACK_ON);
     }
 
     public void savePreferences() {
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putInt(Key.REST_DELAY_KEY, Preferences.REST_DELAY);
         editor.putInt(Key.SLEEP_DELAY_KEY, Preferences.SLEEP_DELAY);
+        editor.putBoolean(Key.FEEDBACK_ON_KEY, Preferences.FEEDBACK_ON);
 
         editor.apply();
 
         Log.d(PERSISTENCE_CTRL, "Rest delay saved: " + Preferences.REST_DELAY);
         Log.d(PERSISTENCE_CTRL, "Sleep delay saved: " + Preferences.SLEEP_DELAY);
+        Log.d(PERSISTENCE_CTRL, "Feedback on saved: " + Preferences.FEEDBACK_ON);
     }
 
     public void loadCycleVariables() {

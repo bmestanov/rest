@@ -1,6 +1,8 @@
 package com.rest.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -24,9 +26,17 @@ public class SettingsFragment extends PreferenceFragment
         addPreferencesFromResource(R.xml.fragment_settings);
 
         //Setting up current values
-        Preference cycleLength = findPreference(CycleController.Constants.CYCLE_LENGTH_KEY);
-        cycleLength.setSummary(getString(R.string.cycle_length_summary) +
-                String.format(" %d minutes.", CycleController.CYCLE_LENGTH));
+        setSleepLength();
+
+        //Set up the resetting option
+        findPreference(Preferences.RESET_CYCLE_LENGTH)
+                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        confirmReset();
+                        return true;
+                    }
+                });
     }
 
     @Override
@@ -51,6 +61,34 @@ public class SettingsFragment extends PreferenceFragment
         } else if (key.equals(Preferences.Key.SLEEP_DELAY_KEY)) {
             Preferences.SLEEP_DELAY = Integer.valueOf(sharedPreferences
                     .getString(key, ""));
+        } else if (key.equals(Preferences.Key.FEEDBACK_ON_KEY)) {
+            Preferences.FEEDBACK_ON = Boolean.valueOf(sharedPreferences
+                    .getString(key, "true"));
         }
     }
+
+    @SuppressLint("DefaultLocale")
+    private void setSleepLength() {
+        Preference cycleLength = findPreference(CycleController.Constants.CYCLE_LENGTH_KEY);
+        cycleLength.setSummary(getString(R.string.cycle_length_summary) +
+                String.format(" %d minutes.", CycleController.CYCLE_LENGTH));
+    }
+
+    private void confirmReset() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getActivity().getString(R.string.reset_cycle_length));
+        builder.setMessage(getActivity().getString(R.string.warn_reset_dialog));
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                CycleController.reset();
+                //Update the UI
+                setSleepLength();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, null);
+        builder.create().show();
+    }
+
+
 }

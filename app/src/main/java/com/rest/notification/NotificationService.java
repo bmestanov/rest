@@ -17,6 +17,7 @@ import com.rest.R;
 import com.rest.activity.RateActivity;
 import com.rest.models.Alarm;
 import com.rest.state.App;
+import com.rest.state.Preferences;
 
 public class NotificationService extends IntentService {
     public NotificationService() {
@@ -33,16 +34,12 @@ public class NotificationService extends IntentService {
         PendingIntent contentIntent = null;
 
         //Boot is completed - so reschedule all repeating alarms
-        if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
-            NotificationMaster nMaster = new NotificationMaster(getBaseContext());
-            for (Alarm alarm : App.getState().getAlarms()) {
-                nMaster.scheduleForRepeating(alarm);
-            }
+        if (rescheduleOnBoot(action)) {
             return;
         }
 
         String msg;
-        if (action.equals(NotificationMaster.EVENT_FEEDBACK)) {
+        if (action.equals(NotificationMaster.EVENT_FEEDBACK) && Preferences.FEEDBACK_ON) {
             contentIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, RateActivity.class), 0);
             msg = "How do you feel?";
@@ -53,6 +50,17 @@ public class NotificationService extends IntentService {
         sendNotification(contentIntent, msg);
 
         Log.d("AlarmService", "Notification sent.");
+    }
+
+    private boolean rescheduleOnBoot(String action) {
+        if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
+            NotificationMaster nMaster = new NotificationMaster(getBaseContext());
+            for (Alarm alarm : App.getState().getAlarms()) {
+                nMaster.scheduleForRepeating(alarm);
+            }
+            return true;
+        }
+        return false;
     }
 
     private void sendNotification(PendingIntent contentIntent, String msg) {

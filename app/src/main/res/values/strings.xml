@@ -19,7 +19,7 @@
     <string name="align_direction_sharedpref_key">align_direction</string>
     <string name="confidence_sharedpref_key">confidence</string>
     <string name="reset_cycle_length">Reset cycle length</string>
-    <string name="warn_reset">This will reset your cycle length back to 90 minutes. Proceed?</string>
+    <string name="warn_reset">Reset your cycle length back to 90 minutes.</string>
     <string name="no_suggestions">No suggestions available</string>
     <string name="no_repeating_alarms">No repeating alarms set</string>
     <string name="fixed_wakeup">Fixed wakeup</string>
@@ -30,4 +30,11 @@
     <string name="remove_alarm">Remove repeating alarm</string>
     <string name="proceed">Proceed?</string>
     <string name="add">Add</string>
+    <string name="rest_delay_summary">The typical time it takes you to get ready to sleep.</string>
+    <string name="sleep_delay_summary">The typical time it takes you to fall asleep when resting (average is 20 minutes).</string>
+    <string name="feedback_on_sharedpref_key">feedback_on_key</string>
+    <string name="feedback_on">Feedback requests</string>
+    <string name="feedback_on_summary">Feedbacks after each alarm help rest adjust to the length of your sleep cycle. Disable this once you think rest is working good enough.</string>
+    <string name="reset_cycle_length_sharedpref_key">reset_cycle_length</string>
+    <string name="warn_reset_dialog">This will reset your sleep cycle length back to 90 minutes. Continue?</string>
 </resources>
